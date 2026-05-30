@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Államigazgatás – Tanulási statisztika</title>
+<style>
+  :root { --bg:#f5f3ef; --card:#fff; --primary:#3a5f1f; --primary-dark:#284514;
+    --accent:#7a8f3c; --muted:#6b6b6b; --border:#d9d4c7;
+    --green:#2e7d32; --green-bg:#eaf5ea; --amber:#b9770e; --amber-bg:#fdf3e3;
+    --red:#b00020; --red-bg:#fbeaec; --shadow:0 1px 3px rgba(0,0,0,0.08); }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1d1d1d;margin:0;line-height:1.55;}
+  header{background:var(--primary);color:#fff;padding:24px 32px;box-shadow:var(--shadow);}
+  header h1{margin:0;font-size:22px;font-weight:600;}
+  header .subtitle{margin-top:6px;font-size:14px;opacity:0.85;}
+  header a.back{color:#fff;opacity:0.85;text-decoration:none;font-size:13px;display:inline-block;margin-top:8px;}
+  header a.back:hover{opacity:1;text-decoration:underline;}
+  main{max-width:1020px;margin:24px auto 80px;padding:0 24px;}
+  .intro{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:20px;font-size:14px;color:#2a2a2a;}
+  .grandtotal{background:var(--card);border:2px solid var(--accent);border-radius:10px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .grandtotal .big{font-size:28px;font-weight:700;color:var(--primary);} .grandtotal .lbl{font-size:13px;color:var(--muted);}
+  .grandtotal .sep{width:1px;background:var(--border);align-self:stretch;}
+  .mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:24px;}
+  .modcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .modcard h3{margin:0 0 4px;font-size:15px;color:var(--primary);}
+  .modcard .mod-short{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+  .modcard .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;font-size:13.5px;}
+  .modcard .stat-label{color:var(--muted);font-size:12px;}
+  .modcard .stat-val{font-weight:700;color:var(--primary);}
+  .modcard .bar{height:8px;background:#eceae4;border-radius:4px;overflow:hidden;margin-top:6px;}
+  .modcard .bar .fill{height:100%;background:var(--accent);transition:width 0.4s;}
+  .modcard a{display:inline-block;margin-top:10px;font-size:13px;color:var(--primary);text-decoration:none;font-weight:600;}
+  .modcard a:hover{text-decoration:underline;}
+  .section-title{margin:24px 0 8px;font-size:16px;font-weight:600;color:var(--primary);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .filter-row{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:13.5px;}
+  .filter-row label{display:flex;align-items:center;gap:8px;cursor:pointer;} .filter-row select,.filter-row input[type=range]{font-size:13.5px;padding:4px 8px;}
+  .filter-row .threshold-val{font-weight:700;color:var(--primary);min-width:38px;text-align:right;}
+  .weak-list{display:flex;flex-direction:column;gap:8px;}
+  .weak-item{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;}
+  .weak-item.mid{border-left-color:var(--amber);}
+  .weak-item .score{font-weight:700;font-size:16px;min-width:64px;text-align:center;color:var(--red);}
+  .weak-item.mid .score{color:var(--amber);}
+  .weak-item .meta{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;}
+  .weak-item .qtext{font-size:14px;color:#1d1d1d;margin-top:3px;}
+  .weak-item a.btn{background:var(--primary);color:#fff;padding:7px 14px;border-radius:5px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap;}
+  .weak-item a.btn:hover{background:var(--primary-dark);}
+  .empty{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;text-align:center;color:var(--muted);font-size:14px;}
+  .empty strong{color:var(--primary);}
+  .reset-btn{background:#fff;color:var(--red);border:1px solid var(--red);padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500;}
+  .reset-btn:hover{background:#fdecec;}
+  @media (max-width:640px){header{padding:20px 18px;} main{padding:0 14px;} .weak-item{grid-template-columns:1fr;gap:8px;} .weak-item a.btn{justify-self:start;}}
+</style></head><body>
+<header><h1>Államigazgatás – Tanulási statisztika</h1><div class="subtitle">Az Államigazgatás kérdéssor eredményeinek áttekintése</div><a class="back" href="index_allamigazgatas.html">← Vissza a kezdőlapra</a></header>
+<main>
+<div class="intro"><strong>Mit lát itt?</strong> A kérdéssorokban elért eredményeinek áttekintését – modulonként a kitöltött kérdések számát, az átlagos elért pontszámot, és kiemelve azokat a kérdéseket, ahol a legkevesebb pontot kapta. A <em>„Gyakorold újra"</em> gombbal egyenesen a kérdéshez ugorhat. Az adatok a böngészőjében tárolódnak, így csak ezen a gépen láthatók.</div>
+<div class="grandtotal" id="grandtotal"><span>Adatok betöltése…</span></div>
+<h2 class="section-title">Modulonkénti haladás</h2>
+<div class="mods" id="mods"></div>
+<div class="section-title">Gyenge kérdések <button class="reset-btn" onclick="resetAll()">🗑️ Statisztika törlése</button></div>
+<div class="filter-row">
+  <label>Küszöb: <input type="range" id="thr" min="0" max="100" value="61" oninput="render()"> <span class="threshold-val" id="thrVal">61%</span> alatti</label>
+  <label>Modul: <select id="modf" onchange="render()"><option value="">összes</option></select></label>
+  <label><input type="checkbox" id="topN" checked onchange="render()"> Csak a legrosszabb 20</label>
+</div>
+<div id="weak"></div>
+</main>
+<script>
+const MODULES = [{"name": "Államigazgatás", "short": "Államigazgatás", "key": "kozig_allamigazgatas_kerdessor_2026_v1", "file": "kerdessor_allamigazgatas_2026.html", "total": 129, "q": [{"qid": "15/1", "p": 15, "t": "Ismertesse milyen okból és hogyan alakult át a hatalommegosztás klasszikus elméletének alkalmazása, milyen elemekkel, intézményekkel bővült!"}, {"qid": "15/2", "p": 15, "t": "Ismertesse az Országgyűlés és a Kormány viszonyát, térjen ki a hatalmi ágakra, a bizalomra és az ellenőrzésre!"}, {"qid": "15/3", "p": 15, "t": "Ismertesse a köztársasági elnök és a Kormány közigazgatási viszonyát, különös tekintettel a köztársasági elnök feladat- és hatáskörére!"}, {"qid": "15/4", "p": 15, "t": "Hasonlítsa össze az Állami Számvevőszék és az alapvető jogok biztosának államigazgatás felett gyakorolt ellenőrző tevékenységét!"}, {"qid": "15/5", "p": 15, "t": "Ismertesse a magyar közigazgatás alrendszereit, határozza meg a hasonlóságokat és különbségeket, valamint jellemezze a kapcsolatukat!"}, {"qid": "15/6", "p": 15, "t": "Határozza meg a decentralizált szervek és a dekoncentrált szervek közös sajátosságait és különbségeiket!"}, {"qid": "15/7", "p": 15, "t": "Csoportosítsa az államigazgatási szerveket és határozza meg az elhatárolás alapját, valamint hozzon példát az egyes szervtípusokra!"}, {"qid": "15/8", "p": 15, "t": "Határozza meg az irányítás fogalmát, eszközeit, jellemzőit és típusait!"}, {"qid": "15/9", "p": 15, "t": "Határozza meg a Kormány fogalmát, funkcióit és összetételét, röviden jellemezze a miniszterelnök kiemelkedő szerepét!"}, {"qid": "15/10", "p": 15, "t": "Mutassa be a Kormány működését (kormányülés), döntéshozatalát és ügyrendjét!"}, {"qid": "15/11", "p": 15, "t": "Jellemezze a Kormány üléseinek előkészítési folyamatát, mutassa be a Közigazgatási Államtitkári Értekezletet!"}, {"qid": "15/12", "p": 15, "t": "Határozza meg a kormánybiztos fogalmát, funkcióit és jellemzőit!"}, {"qid": "15/13", "p": 15, "t": "Határozza meg a kormánybiztos és a Kormány többi segédszerve közötti különbségeket és az azonosságaikat!"}, {"qid": "15/14", "p": 15, "t": "Mutassa be a minisztérium vezetési struktúráját és belső szervezeti felépítését!"}, {"qid": "15/15", "p": 15, "t": "Mutassa be a Miniszterelnökség szervezeti felépítését és vezetési struktúráját!"}, {"qid": "15/16", "p": 15, "t": "Ismertesse a helyi önkormányzatok által ellátott államigazgatási feladatok szervezeti kereteit és főbb szabályait!"}, {"qid": "15/17", "p": 15, "t": "Mutassa be a kormányhivatal vezetési és szervezeti struktúráját!"}, {"qid": "15/18", "p": 15, "t": "Mutassa be a járási hivatal jogállását, vezetését és szervezeti felépítését, valamint feladatkörét!"}, {"qid": "15/19", "p": 15, "t": "Ismertesse a közigazgatás alapfunkcióit, állandó és változó funkcióit, valamint ezek összefüggéseit!"}, {"qid": "15/20", "p": 15, "t": "Csoportosítsa az államigazgatási tevékenységfajtákat!"}, {"qid": "15/21", "p": 15, "t": "Határozza meg a hatósági felügyelet típusait és jellemezze az egyes típusokat!"}, {"qid": "15/22", "p": 15, "t": "Határozza meg a nemzeti vagyon fogalmát, jellemzőit és kategorizálja a vagyonelemeket!"}, {"qid": "15/23", "p": 15, "t": "Ismertesse a szervezeti és működési szabályzatra vonatkozó jogi szabályozást és főbb elemeit!"}, {"qid": "15/24", "p": 15, "t": "Ismertesse a zárt rendszerű közigazgatási személyzeti politikát!"}, {"qid": "15/25", "p": 15, "t": "Ismertesse a közigazgatási személyzeti politika nyitott rendszerét!"}, {"qid": "15/26", "p": 15, "t": "Ismertesse a közigazgatási személyzeti politika magyarországi fejlődését 1867-től, és röviden jellemezze a hét főbb korszakot!"}, {"qid": "15/27", "p": 15, "t": "Mutassa be az államigazgatási dolgozó fegyelmi felelősségének szabályait, és a kiszabható fegyelmi büntetéseket!"}, {"qid": "15/28", "p": 15, "t": "Mutassa be az államigazgatási dolgozó kárfelelősségének feltételeit, a kimentési okokat és típusait!"}, {"qid": "15/29", "p": 15, "t": "Jellemezze a vezetői eredményfelelősséget különös tekintettel a jogi felelősségtől való különbözőségére!"}, {"qid": "15/30", "p": 15, "t": "Jellemezze az új közmenedzsment reformirányzatát, mutassa be kialakulásának okait, szakaszait!"}, {"qid": "15/31", "p": 15, "t": "Mutassa be az Európai Közigazgatási Tér fogalmát és sorolja fel az európai közigazgatási alapelveket!"}, {"qid": "10/1", "p": 10, "t": "Ismertesse a hatalommegosztás klasszikus elméletét!"}, {"qid": "10/2", "p": 10, "t": "Határozza meg, hogy mit jelent a fékek és ellensúlyok rendszere!"}, {"qid": "10/3", "p": 10, "t": "Határozza meg, hogy mit jelent az igazgatási hatalom elmélete és milyen történelmi kontextusban jelent meg!"}, {"qid": "10/4", "p": 10, "t": "Jellemezze a Kormány és az államigazgatás viszonyát!"}, {"qid": "10/5", "p": 10, "t": "Ismertesse az igazságszolgáltatás és az államigazgatás viszonyát!"}, {"qid": "10/6", "p": 10, "t": "Ismertesse az ügyészség és az államigazgatás viszonyát!"}, {"qid": "10/7", "p": 10, "t": "Ismertesse a helyi önkormányzatok felett gyakorolt törvényességi felügyelet rendszerét: nevezze meg a feladat- és hatáskörrel rendelkező állami szerveket és főbb feladataikat!"}, {"qid": "10/8", "p": 10, "t": "Mutassa be a magyar kormányzati rendszer és az államigazgatás fejlődésének történetét a kiegyezéstől 1989-ig és röviden jellemezze az egyes korszakokat különös tekintettel a kormányformára!"}, {"qid": "10/9", "p": 10, "t": "Határozza meg, hogy milyen előnyei, illetve hátrányai vannak a decentralizáció alkalmazásának a közigazgatásban!"}, {"qid": "10/10", "p": 10, "t": "Csoportosítsa az államigazgatási szerveket! Sorolja fel az egyes szervtípusokat!"}, {"qid": "10/11", "p": 10, "t": "Határolja el egymástól az irányítást, a felügyeletet és az ellenőrzést!"}, {"qid": "10/12", "p": 10, "t": "Határozza meg, hogy mely területszervezési döntések tartoznak az Országgyűlés, valamint a köztársasági elnök feladat- és hatáskörébe!"}, {"qid": "10/13", "p": 10, "t": "Jellemezze a Kormány kabinetjeit a következő szempontok szerint: funkció, összetétel, működés!"}, {"qid": "10/14", "p": 10, "t": "Jellemezze a kormánybizottságot a következő szempontok szerint: feladat, összetétel, működés!"}, {"qid": "10/15", "p": 10, "t": "Határozza meg az interminiszteriális bizottság fogalmát és funkcióit és jellemzőit!"}, {"qid": "10/16", "p": 10, "t": "Mutassa be az államtitkár jogállását (feladatai, kinevezése, megbízatásának megszűnése)!"}, {"qid": "10/17", "p": 10, "t": "Mutassa be a közigazgatási államtitkár jogállását (feladatai, kinevezése)!"}, {"qid": "10/18", "p": 10, "t": "Mutassa be a helyettes államtitkár jogállását (feladatai, kinevezése)!"}, {"qid": "10/19", "p": 10, "t": "Határozza meg a kormányzati főhivatalok és a központi hivatalok közötti azonosságokat!"}, {"qid": "10/20", "p": 10, "t": "Határozza meg a kormányzati főhivatalok és a központi hivatalok közötti különbségeket!"}, {"qid": "10/21", "p": 10, "t": "Határozza meg az autonóm államigazgatási szervek sajátosságait!"}, {"qid": "10/22", "p": 10, "t": "Mutassa be, hogy mi indokolja a helyi önkormányzatok államigazgatási feladatellátását!"}, {"qid": "10/23", "p": 10, "t": "Sorolja fel a kormányhivatal főbb feladat- és hatásköreit!"}, {"qid": "10/24", "p": 10, "t": "Határozza meg, hogy milyen elvárások fogalmazódnak meg a közigazgatással szemben a demokratikus jogállamban!"}, {"qid": "10/25", "p": 10, "t": "Hasonlítsa össze a közintézeti és a közüzemi típusú szerveket! Határozza meg az azonosságokat és a különbségeket!"}, {"qid": "10/26", "p": 10, "t": "Ismertesse, hogy milyen törekvések voltak az államigazgatási feladatok felmérésére és milyen eredményt hoztak ezek!"}, {"qid": "10/27", "p": 10, "t": "Ismertesse, hogy mit jelent a POSDCORB betűszó és mi a jelentősége?"}, {"qid": "10/28", "p": 10, "t": "Ismertesse a hatékony igazgatás modelljét és ennek kritikáját!"}, {"qid": "10/29", "p": 10, "t": "Határozza meg az államigazgatási hatósági jogalkalmazás fogalmát és jellemzőit!"}, {"qid": "10/30", "p": 10, "t": "Határozza meg a hatósági felügyelet fogalmát és jellemzőit!"}, {"qid": "10/31", "p": 10, "t": "Határozza meg, hogy miben különbözik a kiadmányozás a hatáskörtől!"}, {"qid": "10/32", "p": 10, "t": "Ismertesse az objektív felelősség fogalmát és jellemzőit az államigazgatási dolgozók vonatkozásában! Példákat is mutasson be!"}, {"qid": "10/33", "p": 10, "t": "Határozza meg az államigazgatási dolgozó fegyelmi és kártérítési felelőssége közötti különbségeket!"}, {"qid": "10/34", "p": 10, "t": "Jellemezze az államigazgatási dolgozók büntetőjogi felelősségét és röviden mutassa be az egyes csoportjait!"}, {"qid": "10/35", "p": 10, "t": "Határozza meg az – általában vett - jogi felelősség fogalmát, mutassa be rendszerét, típusait és jellemzőit!"}, {"qid": "10/36", "p": 10, "t": "Határozza meg a közszolgálati etikai felelősség fogalmát és funkcióit!"}, {"qid": "10/37", "p": 10, "t": "Jellemezze – általában véve - az utóbbi évtizedek globális közigazgatási reformirányzatait, különös tekintettel sikeresség feltételrendszerére és nevezze meg a fontosabb reformirányzatokat!"}, {"qid": "10/38", "p": 10, "t": "Ismertesse, hogy mi jellemzi a Good Governance (jó kormányzás) irányzatot!"}, {"qid": "10/39", "p": 10, "t": "Ismertesse, hogy miben áll a neo-weberi állam és közigazgatás lényege!"}, {"qid": "10/40", "p": 10, "t": "Ismertesse a közigazgatás-fejlesztésben részt vevő nemzetközi szervezetek tevékenységét, típusait és minden típusra írjon legalább 1-1 példát!"}, {"qid": "10/41", "p": 10, "t": "Ismertesse, hogy az Európai Unió milyen kötelezettségeket ír elő a tagállamok számára közigazgatásuk kialakítása tekintetében!"}, {"qid": "10/42", "p": 10, "t": "Soroljon fel 10 olyan célkitűzést (területet/lépést/intézkedést), amelyek az ezredforduló utáni közigazgatás-fejlesztés nemzetközi gyakorlatára jellemzőek!"}, {"qid": "10/43", "p": 10, "t": "Mutassa be a Magyary Programok 'Személyzet' beavatkozási területét és nevesítsen négy intézkedést, amely a programok szellemében valósult meg az utóbbi években!"}, {"qid": "10/44", "p": 10, "t": "Nevezze meg és röviden ismertesse a magyar közigazgatásban 2010 óta meghirdetett jelentős és átfogó közigazgatás-fejlesztési programokat, azok célját, szempontjait, intézkedési területeit!"}, {"qid": "5/1", "p": 5, "t": "Határozza meg, hogy mit jelent a municipiális hatalom és milyen történelmi kontextusban jelent meg!"}, {"qid": "5/2", "p": 5, "t": "Ismertesse, hogy mely államigazgatási, illetve közigazgatási normatív aktusok képezik utólagos normakontroll tárgyát és mely szervek bírálják el ezeket!"}, {"qid": "5/3", "p": 5, "t": "Ismertesse az alapvető jogok biztosa és az államigazgatás viszonyát, valamint az alapvető jogok biztosa által alkalmazható eszközöket!"}, {"qid": "5/4", "p": 5, "t": "Ismertesse az Állami Számvevőszék és az államigazgatás viszonyát, valamint az Állami Számvevőszék által alkalmazható eszközöket!"}, {"qid": "5/5", "p": 5, "t": "Ismertesse, hogy mi jellemzi a helyi önkormányzatokat megillető véleményezési és javaslattételi jogot, továbbá fejtse ki azok tartalmát!"}, {"qid": "5/6", "p": 5, "t": "A magyar közigazgatás két alrendszere között a relatív szétválasztásuk ellenére vannak kapcsolódási pontok. Nevezze meg ezeket!"}, {"qid": "5/7", "p": 5, "t": "Határozza meg a tutela fogalmát!"}, {"qid": "5/8", "p": 5, "t": "Soroljon fel ötöt a Kit.-ben meghatározott, kormánytisztviselőre vonatkozó hivatás-etikai alapelvekből!"}, {"qid": "5/9", "p": 5, "t": "Határozza meg Miniszterelnöki Kabinetiroda jogállását és funkcióit!"}, {"qid": "5/10", "p": 5, "t": "Ismertesse, hogy milyen előnyökkel, illetve hátrányokkal jár a centralizáció a közigazgatásban!"}, {"qid": "5/11", "p": 5, "t": "Foglalja össze, hogy mit kell tudni az illetékességről!"}, {"qid": "5/12", "p": 5, "t": "Mutassa be a közigazgatási és területfejlesztési miniszter kormányhivatal felett gyakorolt irányítási jogkörét!"}, {"qid": "5/13", "p": 5, "t": "Mutassa be a szakmai irányító miniszterek irányítási jogosítványait a kormányhivatal felett gyakorolt irányítási jogkörben!"}, {"qid": "5/14", "p": 5, "t": "Határozza meg az irányítás fajtáit az irányítás irányultsága alapján!"}, {"qid": "5/15", "p": 5, "t": "Határozza meg, hogy miben mutatkoznak meg az irányítás és a vezetés azonosságai és különbségei!"}, {"qid": "5/16", "p": 5, "t": "Mutassa be a Miniszterelnökség jogállását és funkcióit!"}, {"qid": "5/17", "p": 5, "t": "Jellemezze a tárca nélküli minisztert!"}, {"qid": "5/18", "p": 5, "t": "Sorolja fel a Kormány segédszerveit!"}, {"qid": "5/19", "p": 5, "t": "Sorolja fel, hogy - formáját tekintve – milyen döntéseket hozhat a Kormány!"}, {"qid": "5/20", "p": 5, "t": "Határozza meg, hogy milyen a Kormány ülésével kapcsolatos, lényeges döntési jogosítványai vannak a miniszterelnöknek!"}, {"qid": "5/21", "p": 5, "t": "Ismertesse, hogy hogyan határozza meg a közigazgatás funkcióit a szociológia!"}, {"qid": "5/22", "p": 5, "t": "Ismertesse, hogy milyen lehetséges értelmezésekben jelenik meg az államigazgatás funkciójaként a végrehajtás és mit értünk annak tartalmán!"}, {"qid": "5/23", "p": 5, "t": "Ismertesse, hogy milyen módszerrel határozható meg az államigazgatási feladatok köre!"}, {"qid": "5/24", "p": 5, "t": "Soroljon fel legalább 5 olyan hatáskört, amelyet az Áht. határoz meg és alkalmazható a költségvetési szerv irányítása során!"}, {"qid": "5/25", "p": 5, "t": "Nevezze meg a közszolgáltatások ellátásának lehetséges formáit!"}, {"qid": "5/26", "p": 5, "t": "Határozza meg a szervezeti és működési szabályzat fogalmát és funkcióját!"}, {"qid": "5/27", "p": 5, "t": "Határozza meg az ex lege szabályozási mód fogalmát!"}, {"qid": "5/28", "p": 5, "t": "Határozza meg az intézeti típusú szerv fogalmát, típusait és az elhatárolás alapját!"}, {"qid": "5/29", "p": 5, "t": "Határozza meg az államigazgatási jogalkalmazás fogalmát!"}, {"qid": "5/30", "p": 5, "t": "Foglalja össze, hogy mit kell tudni a hatáskör-átruházás tilalmáról és a szubdelegálás tilalmáról!"}, {"qid": "5/31", "p": 5, "t": "Határozza meg a hatáskör és a feladatkör fogalmát, valamint jellemzőiket!"}, {"qid": "5/32", "p": 5, "t": "Határozza meg az államigazgatás jogalkotó tevékenységét szűk és tág értelemben!"}, {"qid": "5/33", "p": 5, "t": "Határozza meg az államigazgatási tevékenységfajta fogalmát!"}, {"qid": "5/34", "p": 5, "t": "Határozza meg a közigazgatási személyzeti politika fogalmát!"}, {"qid": "5/35", "p": 5, "t": "Határozza meg, hogy mit értünk a közigazgatási pálya biztonságán!"}, {"qid": "5/36", "p": 5, "t": "Határozza meg, hogy mit nevezünk asszimilációs rendszernek és differenciált rendszernek, és miben különböznek egymástól!"}, {"qid": "5/37", "p": 5, "t": "Ismertesse, hogy mit jelent a közigazgatási pálya nyitottsága és mi a jelentősége!"}, {"qid": "5/38", "p": 5, "t": "Jellemezze a közigazgatási személyzeti politika 1867 és 1945 közötti korszakát!"}, {"qid": "5/39", "p": 5, "t": "Jellemezze a közigazgatási személyzeti politika 1945 és 1949 közötti korszakát!"}, {"qid": "5/40", "p": 5, "t": "Jellemezze a közigazgatási személyzeti politika 1949 és 1957 közötti korszakát!"}, {"qid": "5/41", "p": 5, "t": "Jellemezze a közigazgatási személyzeti politika 1957 és 1989 közötti korszakát!"}, {"qid": "5/42", "p": 5, "t": "Jellemezze a közigazgatási személyzeti politika 1992 utáni korszakát!"}, {"qid": "5/43", "p": 5, "t": "Sorolja fel az államigazgatási dolgozók felelősségi alakzatait!"}, {"qid": "5/44", "p": 5, "t": "Határozza meg a kormányzati szolgálati jogviszony fogalmát!"}, {"qid": "5/45", "p": 5, "t": "Határozza meg a kormányzati szolgálati jogviszony főbb jellemzőit - különösen a felelősség szempontjából - a munkajoghoz hasonlítva!"}, {"qid": "5/46", "p": 5, "t": "Határozza meg a vis maior fogalmát és jelentőségét!"}, {"qid": "5/47", "p": 5, "t": "Határozza meg az etikai vétség fogalmát az államigazgatásban!"}, {"qid": "5/48", "p": 5, "t": "Határozza meg a hivatásetikai normák funkcióját!"}, {"qid": "5/49", "p": 5, "t": "Néhány mondatban indokolja, miért szükséges a közigazgatás fejlesztése!"}, {"qid": "5/50", "p": 5, "t": "Határozza meg az adminisztratív konvergencia fogalmát és jellemezze a jelenséget!"}, {"qid": "5/51", "p": 5, "t": "Fejtse ki néhány mondatban, milyen szerepet töltenek be a nemzetközi szervezetek a közigazgatás-fejlesztésben!"}, {"qid": "5/52", "p": 5, "t": "Röviden ismertesse a Helyi Önkormányzatok Európai Chartáját és az Európa Tanács ezzel kapcsolatos szerepét!"}, {"qid": "5/53", "p": 5, "t": "Ismertesse, hogy miben jelölte meg az MP 12.0 az MP 11.0 kritikáját!"}, {"qid": "5/54", "p": 5, "t": "Határozza meg a Magyar Kormánytisztviselői Kar jogállását és főbb – a Kit-ben meghatározott - feladatait!"}]}];
+const THR_DEFAULT = 61;
+let state = { thr:61, modf:'', topN:true };
+function readScores(key){ try { return JSON.parse(localStorage.getItem(key+'_scores')||'{}'); } catch(e) { return {}; } }
+function readAllScores(){
+  const all=[]; MODULES.forEach(m => {
+    const sc = readScores(m.key);
+    m.q.forEach(q => {
+      const s = sc[q.qid];
+      all.push({mod:m.short, modName:m.name, file:m.file, qid:q.qid, p:q.p, t:q.t,
+        attempted: !!s, score: s?s.p:null, max: s?s.m:q.p, ratio: s?s.r:null, ts:s?s.ts:null, n:s?(s.n||0):0});
+    });
+  }); return all;
+}
+function pct(r){ return Math.round(r*100); }
+function esc(s){ const d=document.createElement('div'); d.textContent=String(s||''); return d.innerHTML; }
+function summarize(){
+  const all = readAllScores();
+  const grand = { total:0, att:0, sumP:0, sumM:0, weak:0 };
+  const perMod = MODULES.map(m => ({name:m.name, short:m.short, file:m.file, total:0, att:0, sumP:0, sumM:0, weak:0}));
+  all.forEach((a,i)=>{
+    grand.total++;
+    const mIdx = MODULES.findIndex(x=>x.short===a.mod);
+    perMod[mIdx].total++;
+    if(a.attempted){ grand.att++; perMod[mIdx].att++; grand.sumP+=a.score; grand.sumM+=a.max; perMod[mIdx].sumP+=a.score; perMod[mIdx].sumM+=a.max; if(a.ratio<0.61){grand.weak++; perMod[mIdx].weak++;} }
+  });
+  return {grand, perMod, all};
+}
+function renderGrand(g){
+  const pctTotal = g.total ? Math.round(g.att/g.total*100) : 0;
+  const avg = g.sumM ? Math.round(g.sumP/g.sumM*100) : 0;
+  document.getElementById('grandtotal').innerHTML =
+    '<div><div class="big">'+g.att+' / '+g.total+'</div><div class="lbl">kérdés ellenőrizve ('+pctTotal+'%)</div></div>'+
+    '<div class="sep"></div>'+
+    '<div><div class="big">'+g.sumP+' / '+g.sumM+'</div><div class="lbl">összpontszám az ellenőrzöttekre ('+avg+'%)</div></div>'+
+    '<div class="sep"></div>'+
+    '<div><div class="big" style="color:var(--red)">'+g.weak+'</div><div class="lbl">gyenge (60% alatti) kérdés</div></div>';
+}
+function renderMods(perMod){
+  const html = perMod.map(m => {
+    const pctTotal = m.total ? Math.round(m.att/m.total*100) : 0;
+    const avg = m.sumM ? Math.round(m.sumP/m.sumM*100) : 0;
+    return '<div class="modcard"><div class="mod-short">'+esc(m.short)+'</div><h3>'+esc(m.name)+'</h3>'+
+      '<div class="stats">'+
+      '<div><div class="stat-label">Ellenőrzött</div><div class="stat-val">'+m.att+' / '+m.total+' <span style="font-size:12px;color:var(--muted);font-weight:400">('+pctTotal+'%)</span></div></div>'+
+      '<div><div class="stat-label">Átlag pont</div><div class="stat-val">'+(m.att?avg+'%':'–')+'</div></div>'+
+      '<div><div class="stat-label">Sikertelen (&lt;61%)</div><div class="stat-val" style="color:'+(m.weak>0?'var(--red)':'var(--primary)')+'">'+m.weak+'</div></div>'+
+      '<div><div class="stat-label">Még nem próbált</div><div class="stat-val">'+(m.total-m.att)+'</div></div>'+
+      '</div>'+
+      '<div class="bar"><div class="fill" style="width:'+pctTotal+'%"></div></div>'+
+      '<a href="'+esc(m.file)+'" target="_blank" rel="noopener">Kérdéssor megnyitása →</a></div>';
+  }).join('');
+  document.getElementById('mods').innerHTML = html;
+}
+function renderWeak(all){
+  const thr = state.thr/100;
+  let list = all.filter(a => a.attempted && a.ratio < thr);
+  if (state.modf) list = list.filter(a => a.mod === state.modf);
+  list.sort((a,b) => a.ratio - b.ratio);
+  if (state.topN) list = list.slice(0, 20);
+  if (list.length === 0) {
+    document.getElementById('weak').innerHTML =
+      '<div class="empty">'+(all.filter(a=>a.attempted).length===0
+        ? 'Még nincs eredmény. Nyisson meg egy kérdéssort, írjon választ, és kattintson az „Ellenőrzés" gombra – az eredmények itt megjelennek.'
+        : '<strong>🎉 Nincs ilyen kérdés.</strong> Próbáljon meg magasabb küszöböt beállítani.')+'</div>';
+    return;
+  }
+  document.getElementById('weak').innerHTML = '<div class="weak-list">' +
+    list.map(a => {
+      const cls = a.ratio>=0.35?' mid':'';
+      const ptext = (a.t.length>140 ? a.t.substring(0,140)+'…' : a.t);
+      const anch = a.file + '#q-' + a.qid.replace('/','-');
+      return '<div class="weak-item'+cls+'"><div class="score">'+a.score+' / '+a.max+'<br><span style="font-size:11px;font-weight:400;color:var(--muted)">'+pct(a.ratio)+'%</span></div>'+
+        '<div><div class="meta">'+esc(a.mod)+' · '+esc(a.qid)+(a.n>1?' · '+a.n+'×':'')+'</div><div class="qtext">'+esc(ptext)+'</div></div>'+
+        '<a class="btn" href="'+esc(anch)+'" target="_blank" rel="noopener">Gyakorold újra →</a></div>';
+    }).join('') + '</div>';
+}
+function initModSelect(){
+  const sel = document.getElementById('modf');
+  MODULES.forEach(m => { const o=document.createElement('option'); o.value=m.short; o.textContent=m.short; sel.appendChild(o); });
+}
+function render(){
+  state.thr = parseInt(document.getElementById('thr').value,10);
+  state.modf = document.getElementById('modf').value;
+  state.topN = document.getElementById('topN').checked;
+  document.getElementById('thrVal').textContent = state.thr+'%';
+  const sum = summarize();
+  renderGrand(sum.grand); renderMods(sum.perMod); renderWeak(sum.all);
+}
+function resetAll(){
+  if (!confirm('Biztosan törli az összes elmentett pontszámot? A válaszait nem érinti, csak a statisztikát.')) return;
+  MODULES.forEach(m => localStorage.removeItem(m.key+'_scores'));
+  render();
+}
+initModSelect(); render();
+</script></body></html>

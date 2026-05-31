@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Államigazgatás – Tanulási statisztika</title>
 <style>
-  :root { --bg:#f5f3ef; --card:#fff; --primary:#3a5f1f; --primary-dark:#284514;
-    --accent:#7a8f3c; --muted:#6b6b6b; --border:#d9d4c7;
+  :root { --bg:#f0f2f5; --card:#fff; --primary:#3a5f1f; --primary-dark:#284514;
+    --accent:#7a8f3c; --muted:#6b6b6b; --border:#d4d9c7;
     --green:#2e7d32; --green-bg:#eaf5ea; --amber:#b9770e; --amber-bg:#fdf3e3;
     --red:#b00020; --red-bg:#fbeaec; --shadow:0 1px 3px rgba(0,0,0,0.08); }
   *{box-sizing:border-box;}
@@ -24,13 +24,14 @@
   .modcard .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;font-size:13.5px;}
   .modcard .stat-label{color:var(--muted);font-size:12px;}
   .modcard .stat-val{font-weight:700;color:var(--primary);}
-  .modcard .bar{height:8px;background:#eceae4;border-radius:4px;overflow:hidden;margin-top:6px;}
+  .modcard .bar{height:8px;background:#e6e8e0;border-radius:4px;overflow:hidden;margin-top:6px;}
   .modcard .bar .fill{height:100%;background:var(--accent);transition:width 0.4s;}
   .modcard a{display:inline-block;margin-top:10px;font-size:13px;color:var(--primary);text-decoration:none;font-weight:600;}
   .modcard a:hover{text-decoration:underline;}
   .section-title{margin:24px 0 8px;font-size:16px;font-weight:600;color:var(--primary);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
   .filter-row{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:13.5px;}
-  .filter-row label{display:flex;align-items:center;gap:8px;cursor:pointer;} .filter-row select,.filter-row input[type=range]{font-size:13.5px;padding:4px 8px;}
+  .filter-row label{display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .filter-row select,.filter-row input[type=range]{font-size:13.5px;padding:4px 8px;}
   .filter-row .threshold-val{font-weight:700;color:var(--primary);min-width:38px;text-align:right;}
   .weak-list{display:flex;flex-direction:column;gap:8px;}
   .weak-item{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;}
@@ -47,16 +48,15 @@
   .reset-btn:hover{background:#fdecec;}
   @media (max-width:640px){header{padding:20px 18px;} main{padding:0 14px;} .weak-item{grid-template-columns:1fr;gap:8px;} .weak-item a.btn{justify-self:start;}}
 </style></head><body>
-<header><h1>Államigazgatás – Tanulási statisztika</h1><div class="subtitle">Az Államigazgatás kérdéssor eredményeinek áttekintése</div><a class="back" href="index_allamigazgatas.html">← Vissza a kezdőlapra</a></header>
+<header><h1>Államigazgatás – Tanulási statisztika</h1><div class="subtitle">Az Államigazgatás kérdéssorban elért eredmények áttekintése</div><a class="back" href="index_allamigazgatas.html">← Vissza a kezdőlapra</a></header>
 <main>
-<div class="intro"><strong>Mit lát itt?</strong> A kérdéssorokban elért eredményeinek áttekintését – modulonként a kitöltött kérdések számát, az átlagos elért pontszámot, és kiemelve azokat a kérdéseket, ahol a legkevesebb pontot kapta. A <em>„Gyakorold újra"</em> gombbal egyenesen a kérdéshez ugorhat. Az adatok a böngészőjében tárolódnak, így csak ezen a gépen láthatók.</div>
+<div class="intro"><strong>Mit lát itt?</strong> Az Államigazgatás kérdéssorban elért eredmények áttekintését – a kitöltött kérdések számát, az átlagos elért pontszámot, és kiemelve azokat a kérdéseket, ahol a legkevesebb pontot kapta. A <em>„Gyakorold újra"</em> gombbal egyenesen a kérdéshez ugorhat. Az adatok a böngészőjében tárolódnak, így csak ezen a gépen láthatók.</div>
 <div class="grandtotal" id="grandtotal"><span>Adatok betöltése…</span></div>
-<h2 class="section-title">Modulonkénti haladás</h2>
+<h2 class="section-title">Modul áttekintése</h2>
 <div class="mods" id="mods"></div>
 <div class="section-title">Gyenge kérdések <button class="reset-btn" onclick="resetAll()">🗑️ Statisztika törlése</button></div>
 <div class="filter-row">
   <label>Küszöb: <input type="range" id="thr" min="0" max="100" value="61" oninput="render()"> <span class="threshold-val" id="thrVal">61%</span> alatti</label>
-  <label>Modul: <select id="modf" onchange="render()"><option value="">összes</option></select></label>
   <label><input type="checkbox" id="topN" checked onchange="render()"> Csak a legrosszabb 20</label>
 </div>
 <div id="weak"></div>
@@ -98,7 +98,7 @@ function renderGrand(g){
     '<div class="sep"></div>'+
     '<div><div class="big">'+g.sumP+' / '+g.sumM+'</div><div class="lbl">összpontszám az ellenőrzöttekre ('+avg+'%)</div></div>'+
     '<div class="sep"></div>'+
-    '<div><div class="big" style="color:var(--red)">'+g.weak+'</div><div class="lbl">gyenge (60% alatti) kérdés</div></div>';
+    '<div><div class="big" style="color:var(--red)">'+g.weak+'</div><div class="lbl">gyenge (61% alatti) kérdés</div></div>';
 }
 function renderMods(perMod){
   const html = perMod.map(m => {
@@ -119,13 +119,12 @@ function renderMods(perMod){
 function renderWeak(all){
   const thr = state.thr/100;
   let list = all.filter(a => a.attempted && a.ratio < thr);
-  if (state.modf) list = list.filter(a => a.mod === state.modf);
   list.sort((a,b) => a.ratio - b.ratio);
   if (state.topN) list = list.slice(0, 20);
   if (list.length === 0) {
     document.getElementById('weak').innerHTML =
       '<div class="empty">'+(all.filter(a=>a.attempted).length===0
-        ? 'Még nincs eredmény. Nyisson meg egy kérdéssort, írjon választ, és kattintson az „Ellenőrzés" gombra – az eredmények itt megjelennek.'
+        ? 'Még nincs eredmény. Nyissa meg az Államigazgatás kérdéssort, írjon választ, és kattintson az „Ellenőrzés" gombra – az eredmények itt megjelennek.'
         : '<strong>🎉 Nincs ilyen kérdés.</strong> Próbáljon meg magasabb küszöböt beállítani.')+'</div>';
     return;
   }
@@ -139,13 +138,8 @@ function renderWeak(all){
         '<a class="btn" href="'+esc(anch)+'" target="_blank" rel="noopener">Gyakorold újra →</a></div>';
     }).join('') + '</div>';
 }
-function initModSelect(){
-  const sel = document.getElementById('modf');
-  MODULES.forEach(m => { const o=document.createElement('option'); o.value=m.short; o.textContent=m.short; sel.appendChild(o); });
-}
 function render(){
   state.thr = parseInt(document.getElementById('thr').value,10);
-  state.modf = document.getElementById('modf').value;
   state.topN = document.getElementById('topN').checked;
   document.getElementById('thrVal').textContent = state.thr+'%';
   const sum = summarize();
@@ -156,5 +150,5 @@ function resetAll(){
   MODULES.forEach(m => localStorage.removeItem(m.key+'_scores'));
   render();
 }
-initModSelect(); render();
+render();
 </script></body></html>

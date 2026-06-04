@@ -1,93 +1,1689 @@
-<!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Közigazgatási szakvizsga – Államigazgatás</title><style>  :root { --bg:#f0f2f5; --card:#fff; --primary:#3a5f1f; --primary-dark:#284514; --accent:#7a8f3c;
-    --muted:#6b6b6b; --border:#d4d9c7; --green:#2e7d32; --green-bg:#eaf5ea; --amber:#b9770e; --amber-bg:#fdf3e3;
-    --red:#b00020; --red-bg:#fbeaec; --shadow:0 1px 3px rgba(0,0,0,0.08); }
-  * { box-sizing:border-box; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:var(--bg); color:#1d1d1d; margin:0; padding:0; line-height:1.55; }
-  header { background:var(--primary); color:#fff; padding:26px 32px; box-shadow:var(--shadow); }
-  header h1 { margin:0; font-size:22px; font-weight:600; }
-  header .subtitle { margin-top:6px; font-size:14px; opacity:0.85; }
-  main { max-width:980px; margin:28px auto 120px; padding:0 24px; }
-  .intro { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:18px 22px;
-    margin-bottom:24px; font-size:14.5px; color:#2a2a2a; }
-  .intro strong { color:var(--primary); } .intro .note { display:block; margin-top:8px; font-size:13px; color:var(--muted); }
-  .toolbar { position:sticky; top:0; z-index:100; background:rgba(240,242,245,0.96); backdrop-filter:blur(8px);
-    padding:12px 0; margin-bottom:18px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--border); }
-  .toolbar button { background:var(--primary); color:#fff; border:none; padding:9px 16px; border-radius:6px;
-    font-size:14px; cursor:pointer; font-weight:500; transition:background 0.15s; }
-  .toolbar button:hover { background:var(--primary-dark); }
-  .toolbar button.accent { background:var(--accent); } .toolbar button.accent:hover { background:#69793a; }
-  .toolbar button.secondary { background:#fff; color:var(--primary); border:1px solid var(--primary); }
-  .toolbar button.danger { background:#fff; color:var(--red); border:1px solid var(--red); }
-  .summary { margin-left:auto; font-size:13px; color:var(--muted); align-self:center; text-align:right; }
-  .summary b { color:var(--primary); font-size:14px; }
-  .section { margin:30px 0 8px; padding:12px 18px; background:var(--primary); color:#fff; border-radius:8px 8px 0 0;
-    font-size:16px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
-  .section .badge { background:var(--accent); color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; }
-  .qcard { background:var(--card); border:1px solid var(--border); border-top:none; padding:18px 22px; }
-  .qcard + .qcard { border-top:1px solid var(--border); } .qcard:last-child { border-radius:0 0 8px 8px; }
-  .qhead { display:flex; gap:12px; align-items:flex-start; margin-bottom:6px; }
-  .qnum { background:var(--accent); color:#fff; border-radius:4px; padding:2px 9px; font-size:13px; font-weight:700;
-    min-width:48px; text-align:center; flex-shrink:0; margin-top:2px; }
-  .qtext { font-size:15px; font-weight:500; }
-  .qsource { font-size:12px; color:var(--muted); margin:0 0 10px 60px; }
-  textarea { width:100%; min-height:92px; padding:10px 12px; border:1px solid var(--border); border-radius:6px;
-    font-family:inherit; font-size:14px; line-height:1.5; resize:vertical; background:#fafafa; transition:border-color 0.15s,background 0.15s; }
-  textarea:focus { outline:none; border-color:var(--primary); background:#fff; } textarea.filled { background:#f4f9f1; border-color:#a8c89b; }
-  .qactions { margin-top:10px; display:flex; align-items:center; gap:14px; }
-  .check-btn { background:var(--accent); color:#fff; border:none; padding:8px 18px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; }
-  .check-btn:hover { background:#69793a; } .qpoints { font-size:14px; font-weight:600; }
-  .result { margin-top:14px; display:none; } .result.show { display:block; }
-  .scorebar { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:7px; margin-bottom:12px; }
-  .scorebar.s-good { background:var(--green-bg); border:1px solid #b6dab2; } .scorebar.s-mid { background:var(--amber-bg); border:1px solid #eccf95; }
-  .scorebar.s-low { background:var(--red-bg); border:1px solid #edbac1; }
-  .score-num { font-size:22px; font-weight:700; } .s-good .score-num{color:var(--green);} .s-mid .score-num{color:var(--amber);} .s-low .score-num{color:var(--red);}
-  .score-label { font-size:13.5px; color:#333; }
-  .kwblock { margin:10px 0; } .kwtitle { font-size:12.5px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
-  .chips { display:flex; flex-wrap:wrap; gap:6px; } .chip { font-size:12.5px; padding:3px 10px; border-radius:12px; }
-  .chip.found { background:var(--green-bg); color:var(--green); border:1px solid #b6dab2; } .chip.missing { background:#f0eee9; color:#8a8073; border:1px solid #ddd6c8; }
-  .detail { margin-top:12px; border-top:1px dashed var(--border); padding-top:12px; } .detail summary { cursor:pointer; font-size:13.5px; font-weight:600; color:var(--primary); }
-  .detail .body { margin-top:8px; font-size:13.5px; color:#2a2a2a; background:#f7f8f3; border:1px solid var(--border); border-radius:6px; padding:12px 14px; }
-  .ref { font-size:12px; color:var(--muted); margin-top:8px; }
-  .totalbar { display:none; background:var(--card); border:2px solid var(--accent); border-radius:10px; padding:20px 24px; margin-bottom:24px; box-shadow:var(--shadow); }
-  .totalbar.show { display:block; } .totalbar .big { font-size:30px; font-weight:700; color:var(--primary); } .totalbar .pct { font-size:16px; color:var(--muted); margin-left:10px; }
-  .totalbar .bartrack { height:14px; background:#e6e8e0; border-radius:8px; margin-top:14px; overflow:hidden; } .totalbar .barfill { height:100%; border-radius:8px; transition:width 0.6s; }
-  .totalbar .msg { margin-top:10px; font-size:13.5px; color:#333; }
-  .save-indicator { position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; padding:10px 16px; border-radius:6px; font-size:13px; box-shadow:var(--shadow); opacity:0; transition:opacity 0.3s; pointer-events:none; }
-  .save-indicator.visible { opacity:1; }
-  @media (max-width:640px){ header{padding:20px 18px;} main{padding:0 14px;} .qcard{padding:14px 16px;} .summary{margin-left:0;} .qsource{margin-left:0;} }
-  @media print { .toolbar,.save-indicator,.check-btn{display:none;} }
-  main{max-width:820px;} .lead{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin-bottom:28px;font-size:15px;}
-  .lead strong{color:var(--primary);}
-  .modcard{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px 26px;text-decoration:none;color:inherit;margin-bottom:20px;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s;}
-  .modcard:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,0.10);border-color:var(--accent);}
-  .modtag{display:inline-block;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:3px 11px;border-radius:12px;align-self:flex-start;letter-spacing:0.3px;}
-  .modtitle{margin:14px 0 6px;font-size:20px;font-weight:600;color:var(--primary);} .moddesc{font-size:13.5px;color:var(--muted);} .modmeta{margin-top:14px;font-size:13px;color:#444;}
-  .modbtn{margin-top:16px;background:var(--primary);color:#fff;text-align:center;padding:10px;border-radius:6px;font-size:14px;font-weight:600;}
-  .modcard:hover .modbtn{background:var(--primary-dark);}
-  .examcard{background:var(--primary);border-color:var(--primary);box-shadow:0 4px 16px rgba(0,0,0,0.16);}
-  .examcard:hover{transform:translateY(-3px);box-shadow:0 9px 24px rgba(0,0,0,0.22);border-color:var(--primary);}
-  .examcard .modtag{background:#fff;color:var(--primary);}
-  .examcard .modtitle{color:#fff;} .examcard .moddesc{color:rgba(255,255,255,0.85);} .examcard .modmeta{color:rgba(255,255,255,0.72);}
-  .examcard .modbtn{background:var(--accent);color:#fff;} .examcard:hover .modbtn{background:#8ba046;}
-  .footer{text-align:center;margin-top:30px;font-size:12.5px;color:var(--muted);}</style></head><body>
-<header><h1>Közigazgatási szakvizsga – Államigazgatás</h1><div class="subtitle">Írásbeli esszé gyakorló és önellenőrző felület (2026)</div></header>
-<main><div class="lead"><strong>Államigazgatás tananyagrész.</strong> Ez a felület kizárólag az „Államigazgatás" tananyagrész 129 írásbeli esszékérdését tartalmazza, a többi modultól függetlenül. A kérdéssorban a kérdés alá írhatja válaszát, és az <em>„Ellenőrzés"</em> gombbal a hivatalos tananyag kulcsszavai alapján azonnali, tájékoztató jellegű értékelést kap. A próbateszt vizsgaszerű, 100 pontos összeállításban kérdez. A válaszok a böngészőben, a saját gépén tárolódnak.</div>
-<a class="modcard" href="kerdessor_allamigazgatas_2026.html" target="_blank" rel="noopener"><span class="modtag">KÉRDÉSSOR</span><div class="modtitle">Államigazgatás – teljes kérdéssor</div>
-<div class="moddesc">Az államigazgatás helye az állami szervek rendszerében, az államigazgatás szervezete (Kormány, minisztériumok, kormányhivatalok, járások), funkciói és működése, a személyzeti politika és felelősség, valamint a közigazgatás-fejlesztés.</div>
-<div class="modmeta">129 kérdés · 15 / 10 / 5 pontos csoportok</div><div class="modbtn">Megnyitás →</div></a>
-<div class="subhead" style="font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 14px;">Vizsgaszimuláció</div>
-<a class="modcard examcard" href="probateszt_allamigazgatas_2026.html" target="_blank" rel="noopener"><span class="modtag">PRÓBATESZT · 100 PONT</span><div class="modtitle">Államigazgatás próbavizsga</div>
-<div class="moddesc">Véletlenszerűen összeállított, vizsgaszerű kérdéssor az Államigazgatás tananyagrészből: egy 15, hat 10 és öt 5 pontos kérdés (összesen 100 pont). A végén egyetlen gombbal kiértékel, és bármikor új tesztet kérhet.</div>
-<div class="modmeta">12 kérdés · 1×15 + 6×10 + 5×5 = 100 pont · újrakeverhető</div><div class="modbtn">Próbateszt indítása →</div></a>
-<div class="subhead" style="font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 14px;">Tanulási előrehaladás</div>
-<a class="modcard" href="statisztika_allamigazgatas.html" target="_blank" rel="noopener"><span class="modtag">STATISZTIKA</span><div class="modtitle">Tanulási áttekintés és gyenge pontok</div>
-<div class="moddesc">Haladás és gyenge kérdések áttekintése az Államigazgatás kérdéssorához. A leggyengébb 20 kérdés direkt „Gyakorold újra" linkkel. Az eredmények automatikusan rögzítődnek a kérdéssorban.</div>
-<div class="modmeta">Áttekintés · automatikus gyűjtés</div><div class="modbtn">Statisztika megnyitása →</div></a>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Államigazgatás — Napi tanmenet — Közigazgatási szakvizsga 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-<a class="modcard" href="fogalomtar_allamigazgatas.html" target="_blank" rel="noopener"><span class="modtag">FOGALOMTÁR · FLASHCARD</span><div class="modtitle">Gyors átismétlő és fogalomtár</div>
-<div class="moddesc">Flashcard mód kérdés–válasz kártyákkal (pontérték és „új/tudtam/nem tudtam" szerint szűrhetően), plusz kereshető A–Z fogalomtár az összes kulcsszóval és előfordulásukkal.</div>
-<div class="modmeta">129 kártya · billentyűzettel is használható</div><div class="modbtn">Megnyitás →</div></a>
+:root {
+  --kremes: #faf6ed;
+  --kremes-melyebb: #f3ebd9;
+  --pergamen: #ede2c8;
+  --tinta: #1a1f2e;
+  --tinta-vilagos: #4a4f5e;
+  --tinta-halvany: #7a7f8e;
+  --arany: #b8923a;
+  --arany-vilagos: #d4b366;
+  --arany-melyebb: #8a6a1a;
+  --vonal: #c9b88a;
+}
 
-<div class="footer">A kérdéssor a 2026. március 10-i hivatalos vizsgakérdések és a Nemzeti Közszolgálati Egyetem „Államigazgatás" tananyaga alapján készült. Az értékelés kulcsszó-egyezésen alapul, ezért tájékoztató jellegű.</div></main></body></html>
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--kremes);
+  color: var(--tinta);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(184, 146, 58, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(58, 90, 122, 0.04) 0%, transparent 50%);
+}
+
+/* === FEJLÉC === */
+.fejlec {
+  background: linear-gradient(180deg, #1a1f2e 0%, #2a2f3e 100%);
+  color: var(--kremes);
+  padding: 48px 32px 56px;
+  position: relative;
+  overflow: hidden;
+}
+.fejlec::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--arany-melyebb), var(--arany), var(--arany-melyebb));
+}
+.fejlec::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--arany);
+  opacity: 0.4;
+}
+.fejlec-belso { max-width: 920px; margin: 0 auto; }
+.fejlec-kategoria {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--arany-vilagos);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.fejlec h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+.fejlec h1 em {
+  font-style: italic;
+  color: var(--arany-vilagos);
+  font-weight: 400;
+}
+.fejlec-alcim {
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  color: #c5beac;
+  font-style: italic;
+  margin-bottom: 28px;
+}
+.fejlec-stat {
+  display: flex; gap: 32px; flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid rgba(184, 146, 58, 0.25);
+}
+.stat-elem { font-family: 'Inter', sans-serif; }
+.stat-szam {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--arany-vilagos);
+  line-height: 1;
+}
+.stat-felirat {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #9b9484;
+  margin-top: 4px;
+}
+
+/* === NAVIGÁCIÓ === */
+.nav-wrapper {
+  background: var(--kremes-melyebb);
+  border-bottom: 1px solid var(--vonal);
+  position: sticky; top: 0; z-index: 30;
+  box-shadow: 0 4px 20px rgba(26, 31, 46, 0.06);
+}
+.nav-belso {
+  max-width: 920px; margin: 0 auto;
+  padding: 14px 24px 10px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  justify-content: flex-start;
+}
+.nap-nav {
+  background: var(--kremes);
+  border-top: 1px dashed var(--vonal);
+  padding: 10px 24px 12px;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.nap-nav-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tinta-halvany);
+  width: 100%;
+  margin-bottom: 4px;
+}
+.nap-gomb {
+  border: 1px solid var(--vonal);
+  background: #fff;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--tinta-vilagos);
+  padding: 5px 9px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.nap-gomb:hover {
+  border-color: var(--gomb-szin, var(--arany));
+  background: var(--gomb-bg, var(--pergamen));
+  color: var(--tinta);
+  transform: translateY(-1px);
+}
+.nap-gomb-pont {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gomb-szin, var(--arany));
+  flex-shrink: 0;
+}
+.nap-gomb.szombat { --gomb-szin: #b8923a; --gomb-bg: #f9f1d8; }
+.nap-gomb.unnep { --gomb-szin: #b85a3a; --gomb-bg: #f5e0d8; }
+.nap-gomb.vizsga {
+  --gomb-szin: var(--arany);
+  background: var(--tinta);
+  color: var(--kremes);
+  font-weight: 600;
+  border-color: var(--tinta);
+}
+.nap-gomb.vizsga:hover { background: var(--tinta); color: var(--arany-vilagos); }
+.nap-gomb-mod1 { --gomb-szin: #2c4a6b; --gomb-bg: #e8eef5; }
+.nap-gomb-mod2 { --gomb-szin: #3a6a4a; --gomb-bg: #e8f1ea; }
+.nap-gomb-mod3 { --gomb-szin: #8a5a2a; --gomb-bg: #f5edd8; }
+.nap-gomb-mod4 { --gomb-szin: #5a3a6b; --gomb-bg: #eee5f0; }
+.nap-gomb-mod5 { --gomb-szin: #2a3a6b; --gomb-bg: #e6eaf5; }
+.nap-gomb-mod0 { --gomb-szin: #5a5a4a; --gomb-bg: #ededdf; }
+
+/* Highlight ha megnyitva */
+.nap.highlighted {
+  animation: villan 1.4s ease;
+}
+@keyframes villan {
+  0% { box-shadow: 0 0 0 3px var(--arany); }
+  100% { box-shadow: 0 6px 20px rgba(26, 31, 46, 0.08); }
+}
+
+.nav-gomb {
+  border: 1px solid var(--vonal);
+  background: var(--kremes);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--tinta-vilagos);
+  padding: 8px 14px;
+  border-radius: 22px;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  letter-spacing: 0.3px;
+}
+.nav-gomb:hover {
+  background: var(--pergamen);
+  border-color: var(--arany);
+  color: var(--tinta);
+}
+.nav-gomb.on {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--kremes);
+  box-shadow: 0 2px 8px rgba(26, 31, 46, 0.2);
+}
+.nav-gomb.on::before {
+  content: '◆';
+  margin-right: 5px;
+  color: var(--arany-vilagos);
+}
+
+/* === FŐ TARTALOM === */
+.fo {
+  max-width: 920px; margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* === HETI FEJLÉC === */
+.het-fejlec {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin: 36px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vonal);
+  position: relative;
+}
+.het-fejlec::before {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--arany);
+}
+.het-szam-nagy {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--arany);
+  line-height: 0.9;
+  font-style: italic;
+}
+.het-info { flex: 1; padding-top: 10px; }
+.het-cim {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--tinta);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.het-datum {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tinta-halvany);
+}
+
+/* === NAP KÁRTYA === */
+.nap {
+  background: #ffffff;
+  border: 1px solid var(--vonal);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.nap:hover {
+  box-shadow: 0 6px 20px rgba(26, 31, 46, 0.08);
+  transform: translateY(-1px);
+}
+.nap.nyitva { box-shadow: 0 8px 28px rgba(26, 31, 46, 0.1); }
+.nap::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--szin, var(--arany));
+}
+
+.nap-fej {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px 16px 22px;
+  cursor: default;
+}
+.nap-fej.kattintható { cursor: pointer; }
+.nap-fej.kattintható:hover .nap-tema { color: var(--szin, var(--tinta)); }
+
+.nap-datum-blokk {
+  flex-shrink: 0;
+  text-align: center;
+  width: 64px;
+  padding: 6px 0;
+  border-right: 1px solid var(--pergamen);
+  padding-right: 14px;
+}
+.nap-honap {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tinta-halvany);
+  margin-bottom: 2px;
+}
+.nap-szam {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--szin, var(--tinta));
+  line-height: 1;
+}
+.nap-honap-nev {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--tinta-halvany);
+  margin-top: 3px;
+}
+
+.nap-info {
+  flex: 1;
+  min-width: 0;
+}
+.nap-tipus-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.nap-hosszu {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #8a5a2a;
+  background: rgba(184, 146, 58, 0.16);
+  border: 1px solid rgba(184, 146, 58, 0.4);
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.nap-hetnev {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--szin, var(--arany-melyebb));
+}
+.tipus-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: var(--szin-vil, var(--pergamen));
+  color: var(--szin, var(--arany-melyebb));
+  border: 1px solid var(--szin-bor, var(--vonal));
+}
+.nap-stat {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--tinta-halvany);
+  letter-spacing: 0.5px;
+}
+.nap-tema {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--tinta);
+  line-height: 1.35;
+  transition: color 0.2s;
+  margin-bottom: 8px;
+}
+
+
+.nap-nyil {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--vonal);
+  border-radius: 50%;
+  color: var(--tinta-vilagos);
+  font-size: 11px;
+  transition: all 0.3s;
+}
+.nap.nyitva .nap-nyil {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--kremes);
+  transform: rotate(180deg);
+}
+
+/* === KIBONTOTT TARTALOM === */
+.nap-body {
+  display: none;
+  border-top: 1px solid var(--pergamen);
+  background: linear-gradient(180deg, #fdfaf3 0%, #ffffff 100%);
+}
+
+.tetel {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--pergamen);
+}
+.tetel:last-child { border-bottom: none; }
+
+.tetel-fej {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--vonal);
+}
+.tetel-kod {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  background: var(--szin, var(--tinta));
+  color: #fff;
+  border-radius: 3px;
+}
+.tetel-cim {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--szin, var(--tinta));
+  flex: 1;
+  line-height: 1.3;
+}
+
+/* === KÉRDÉSEK === */
+.kerdes-csoport {
+  margin-bottom: 14px;
+}
+.kerdes-csoport:last-child { margin-bottom: 0; }
+
+.csoport-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--csop-szin);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.csoport-cim::before {
+  content: '';
+  width: 16px; height: 1px;
+  background: var(--csop-szin);
+}
+.csoport-cim::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--csop-szin);
+  opacity: 0.2;
+}
+
+.kerdes {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.kerdes-jelolo {
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+  padding-top: 1px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--csop-szin);
+}
+.kerdes-szoveg {
+  color: var(--tinta);
+  font-family: 'EB Garamond', serif;
+}
+.kerdes.k15 .kerdes-szoveg {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Csoport színváltozók */
+.k15-csop { --csop-szin: var(--szin); }
+.k10-csop { --csop-szin: var(--szin); opacity: 0.95; }
+.k5-csop { --csop-szin: var(--szin-vilagos, var(--szin)); }
+
+/* === SPECIÁLIS NAPOK === */
+.nap.szombat::before { background: var(--arany); }
+.nap.szombat .nap-szam { color: var(--arany-melyebb); }
+.nap.unnep::before { background: #b85a3a; }
+.nap.vizsga {
+  background: linear-gradient(135deg, #1a1f2e 0%, #2a2f3e 100%);
+  color: var(--kremes);
+}
+.nap.vizsga::before { background: var(--arany); }
+.nap.vizsga .nap-honap,
+.nap.vizsga .nap-honap-nev,
+.nap.vizsga .nap-stat { color: #9b9484; }
+.nap.vizsga .nap-szam { color: var(--arany-vilagos); }
+.nap.vizsga .nap-tema { color: var(--kremes); font-style: italic; font-size: 20px; }
+.nap.vizsga .tipus-pill {
+  background: var(--arany);
+  color: var(--tinta);
+  border-color: var(--arany);
+}
+
+/* === MODUL SZÍNEK === */
+.m1 { --szin: #2c4a6b; --szin-vilagos: #5a7a9b; --szin-vil: #e8eef5; --szin-bor: #b8c6d6; }
+.m2 { --szin: #3a6a4a; --szin-vilagos: #6a9a7a; --szin-vil: #e8f1ea; --szin-bor: #b8ceb8; }
+.m3 { --szin: #8a5a2a; --szin-vilagos: #b8923a; --szin-vil: #f5edd8; --szin-bor: #d6c490; }
+.m4 { --szin: #5a3a6b; --szin-vilagos: #8a6a9b; --szin-vil: #eee5f0; --szin-bor: #c8b5d0; }
+.m5 { --szin: #2a3a6b; --szin-vilagos: #5a6a9b; --szin-vil: #e6eaf5; --szin-bor: #b5bbd6; }
+.m0 { --szin: #5a5a4a; --szin-vilagos: #8a8a7a; --szin-vil: #ededdf; --szin-bor: #c8c5b5; }
+
+/* ═══════════════ TANULÁSI TIPP ═══════════════ */
+.tipp-panel {
+  background: linear-gradient(180deg, #fdfaf3 0%, #ffffff 100%);
+  border: 1px solid var(--vonal);
+  border-left: 4px solid var(--arany);
+  border-radius: 3px;
+  margin: 4px 0 16px;
+  overflow: hidden;
+}
+.tipp-fej {
+  padding: 11px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  user-select: none;
+  background: rgba(184, 146, 58, 0.06);
+}
+.tipp-fej:hover { background: rgba(184, 146, 58, 0.12); }
+.tipp-fej-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--arany-melyebb);
+  flex: 1;
+}
+.tipp-fej-nyil { color: var(--arany); font-size: 11px; transition: transform 0.2s; }
+.tipp-panel.nyitva .tipp-fej-nyil { transform: rotate(180deg); }
+.tipp-body { display: none; padding: 4px 18px 16px; }
+.tipp-panel.nyitva .tipp-body { display: block; }
+.tipp-napi {
+  font-family: 'EB Garamond', serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--tinta);
+  background: #ffffff;
+  border: 1px solid var(--pergamen);
+  border-radius: 3px;
+  padding: 11px 14px;
+  margin: 8px 0 14px;
+}
+.tipp-napi strong { color: var(--kek); font-weight: 600; }
+
+.tipp-napi p { margin: 0 0 10px; }
+.tipp-napi p:last-child { margin-bottom: 0; }
+.tipp-tetel {
+  margin: 9px 0;
+  padding: 9px 12px;
+  background: #fdfaf3;
+  border: 1px solid var(--pergamen);
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.tipp-tetel-kod {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--arany-melyebb);
+  font-size: 16px;
+}
+.tipp-figyelj {
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: rgba(184, 146, 58, 0.1);
+  border-left: 3px solid var(--arany);
+  border-radius: 0 2px 2px 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-style: italic;
+}
+.tipp-figyelj strong { font-style: normal; color: var(--kek); }
+.tipp-napi { }
+
+.tipp-szakasz-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--arany-melyebb);
+  margin: 0 0 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.tipp-szakasz-cim::before { content:''; width:12px; height:1px; background: var(--arany); }
+.tipp-lepesek { list-style: none; padding: 0; counter-reset: tl; }
+.tipp-lepesek li {
+  position: relative;
+  padding: 7px 0 7px 42px;
+  border-bottom: 1px dashed var(--pergamen);
+  font-family: 'EB Garamond', serif;
+  font-size: 14px;
+  line-height: 1.5;
+  counter-increment: tl;
+}
+.tipp-lepesek li:last-child { border-bottom: none; }
+.tipp-lepesek li::before {
+  content: counter(tl);
+  position: absolute; left: 0; top: 7px;
+  width: 26px; height: 26px;
+  background: var(--kek); color: var(--kremes);
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.tipp-lepes-cim { font-weight: 600; color: var(--tinta); }
+.tipp-ido {
+  font-family: 'Inter', sans-serif; font-size: 10px;
+  color: var(--arany-melyebb); font-weight: 600;
+  margin-left: 6px;
+}
+.tipp-lab {
+  margin-top: 12px; font-style: italic; font-size: 13px;
+  color: var(--tinta-vilagos);
+  padding: 8px 12px; background: #fdfaf3;
+  border-left: 3px solid var(--arany-vil); border-radius: 0 2px 2px 0;
+}
+
+/* ═══════════════ ÖSSZEFOGLALÓ ═══════════════ */
+.os-bevez {
+  background: linear-gradient(135deg, #1a1f2e 0%, #2a2f3e 100%);
+  color: var(--kremes);
+  padding: 18px 22px;
+  margin: 4px 0 18px;
+  border-radius: 3px;
+  text-align: center;
+  border-left: 4px solid var(--arany);
+}
+.os-bevez-katlb {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--arany-vil);
+  margin-bottom: 6px;
+}
+.os-bevez-cim {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+}
+.os-bevez-alcim {
+  font-family: 'EB Garamond', serif;
+  font-size: 13px;
+  color: #c5beac;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.os-tetel {
+  background: #ffffff;
+  border: 1px solid var(--vonal);
+  border-radius: 3px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.os-tetel::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #2c4a6b;
+}
+.os-tetel-fej {
+  padding: 13px 18px 10px;
+  border-bottom: 1px solid var(--pergamen);
+  background: linear-gradient(180deg, #fdfaf3 0%, #ffffff 100%);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.os-tetel-kod {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--arany);
+  font-style: italic;
+  line-height: 1;
+}
+.os-tetel-cim {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--tinta);
+  line-height: 1.25;
+  flex: 1;
+}
+.os-tetel-body { padding: 14px 18px 16px; }
+
+.os-szek { margin-bottom: 14px; }
+.os-szek:last-child { margin-bottom: 0; }
+.os-szek-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--arany-mel, #8a6a1a);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.os-szek-cim::before {
+  content: '';
+  width: 12px; height: 1px;
+  background: var(--arany);
+}
+
+.os-lista { list-style: none; padding-left: 0; }
+.os-lista li {
+  padding: 3px 0 3px 16px;
+  position: relative;
+  line-height: 1.5;
+  font-size: 13.5px;
+  font-family: 'EB Garamond', serif;
+}
+.os-lista li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--arany);
+  font-size: 8px;
+  top: 7px;
+}
+.os-szam { padding-left: 22px; counter-reset: os-cnt; }
+.os-szam li {
+  padding: 3px 0 3px 4px;
+  line-height: 1.5;
+  font-size: 13.5px;
+  font-family: 'EB Garamond', serif;
+  counter-increment: os-cnt;
+  position: relative;
+  list-style: none;
+}
+.os-szam li::before {
+  content: counter(os-cnt) ".";
+  position: absolute;
+  left: -20px;
+  width: 16px;
+  text-align: right;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--arany-mel, #8a6a1a);
+  font-size: 11px;
+  top: 5px;
+}
+.os-kulcs { font-weight: 600; color: #2c4a6b; }
+.os-tul {
+  background: linear-gradient(180deg, transparent 60%, rgba(212, 179, 102, 0.4) 60%);
+  font-weight: 500;
+  padding: 0 2px;
+}
+.os-ev {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  background: var(--pergamen);
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+  color: var(--arany-mel, #8a6a1a);
+  white-space: nowrap;
+}
+.os-megj {
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--tinta-vilagos);
+  padding: 7px 10px;
+  background: #fdfaf3;
+  border-left: 3px solid var(--arany-vil);
+  margin-top: 6px;
+  border-radius: 0 2px 2px 0;
+}
+.os-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.os-grid > div {
+  background: #fdfaf3;
+  padding: 9px 12px;
+  border: 1px solid var(--pergamen);
+  border-radius: 2px;
+}
+.os-grid .alcim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--arany-mel, #8a6a1a);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.os-tanacs {
+  margin-top: 18px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1a1f2e 0%, #2a2f3e 100%);
+  color: var(--kremes);
+  border-radius: 3px;
+  text-align: center;
+}
+.os-tanacs-cim {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--arany-vil);
+  margin-bottom: 6px;
+}
+.os-tanacs-szov {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .os-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .fejlec { padding: 32px 20px 40px; }
+  .fejlec h1 { font-size: 28px; }
+  .fejlec-stat { gap: 18px; }
+  .stat-szam { font-size: 22px; }
+  .fo { padding: 20px 16px 40px; }
+  .het-szam-nagy { font-size: 44px; }
+  .het-cim { font-size: 18px; }
+  .nap-fej { padding: 14px 14px 14px 18px; gap: 12px; }
+  .nap-datum-blokk { width: 50px; padding-right: 10px; }
+  .nap-szam { font-size: 22px; }
+  .nap-tema { font-size: 15px; }
+  .tetel { padding: 14px 16px; }
+  .tetel-cim { font-size: 15px; }
+}
+
+/* ═══════════ VEZÉRLŐ (kereső + haladás) ═══════════ */
+.vezerlo {
+  max-width: 920px; margin: 0 auto; padding: 16px 24px;
+  display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+}
+.kereso-wrap { position: relative; flex: 1; min-width: 220px; }
+#kereso {
+  width: 100%; box-sizing: border-box;
+  font-family: 'EB Garamond', serif; font-size: 15px;
+  padding: 10px 14px; border: 1px solid var(--vonal); border-radius: 4px;
+  background: #ffffff; color: var(--tinta);
+}
+#kereso:focus { outline: none; border-color: var(--arany); box-shadow: 0 0 0 3px rgba(184,146,58,0.15); }
+.kereso-eredmeny {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: #ffffff; border: 1px solid var(--vonal); border-radius: 4px;
+  box-shadow: 0 8px 28px rgba(26,31,46,0.18); z-index: 50; max-height: 360px; overflow-y: auto;
+}
+.kereso-eredmeny.aktiv { display: block; }
+.kereso-sor {
+  padding: 9px 14px; cursor: pointer; display: flex; align-items: baseline; gap: 10px;
+  border-bottom: 1px solid var(--pergamen);
+}
+.kereso-sor:last-child { border-bottom: none; }
+.kereso-sor:hover { background: #fdfaf3; }
+.kereso-kod {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
+  color: var(--arany-melyebb); font-size: 16px; flex-shrink: 0; min-width: 42px;
+}
+.kereso-cim { font-family: 'EB Garamond', serif; font-size: 14px; color: var(--tinta); flex: 1; line-height: 1.35; }
+.kereso-nap {
+  font-family: 'Inter', sans-serif; font-size: 10px; color: var(--tinta-halvany);
+  white-space: nowrap; flex-shrink: 0;
+}
+.kereso-nincs { padding: 14px; font-style: italic; color: var(--tinta-vilagos); font-family: 'EB Garamond', serif; }
+.halado-wrap { min-width: 200px; }
+.halado-szoveg {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--arany-melyebb); margin-bottom: 5px; text-align: right;
+}
+.halado-sav { height: 8px; background: var(--pergamen); border-radius: 4px; overflow: hidden; border: 1px solid var(--vonal); }
+.halado-kitolt {
+  height: 100%; width: 0%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--arany-melyebb), var(--arany));
+  transition: width 0.4s ease;
+}
+
+/* ═══════════ NAP: kész-jelölő + MA jelvény ═══════════ */
+.nap { position: relative; }
+.nap-jelolok { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.nap-kesz-gomb {
+  font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase; cursor: pointer;
+  padding: 4px 11px; border-radius: 12px; border: 1px solid var(--vonal);
+  background: #ffffff; color: var(--tinta-vilagos); white-space: nowrap; transition: all 0.15s;
+}
+.nap-kesz-gomb:hover { border-color: var(--arany); color: var(--arany-melyebb); }
+.nap-kesz-gomb.aktiv { background: #3a6a4a; border-color: #3a6a4a; color: #ffffff; }
+.nap-ma-badge {
+  font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  background: var(--arany); color: #1a1f2e; padding: 3px 9px; border-radius: 10px; white-space: nowrap;
+}
+.nap.kesz { opacity: 0.62; }
+.nap.kesz .nap-tema { text-decoration: line-through; text-decoration-color: var(--tinta-halvany); }
+.nap.ma-nap { box-shadow: 0 0 0 2px var(--arany), 0 6px 24px rgba(184,146,58,0.25); }
+.nap.ma-nap::before { background: var(--arany) !important; width: 5px !important; }
+
+@media (max-width: 640px) {
+  .vezerlo { flex-direction: column; align-items: stretch; }
+  .halado-szoveg { text-align: left; }
+}
+
+/* ═══════════ NYOMTATÁS / PDF ═══════════ */
+.nyomtat-gomb-sor { text-align: right; margin-bottom: 12px; }
+.nyomtat-gomb {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; padding: 8px 16px; border-radius: 4px;
+  border: 1px solid var(--arany); background: #ffffff; color: var(--arany-melyebb);
+  transition: all 0.15s;
+}
+.nyomtat-gomb:hover { background: var(--arany); color: #1a1f2e; }
+
+@media print {
+  /* csak a nyomtatandó összefoglaló látszódjon */
+  body.nyomtat header,
+  body.nyomtat .vezerlo,
+  body.nyomtat .nav-wrapper { display: none !important; }
+  body.nyomtat .fo .nap:not(.nyomtatando) { display: none !important; }
+  body.nyomtat .nyomtatando { box-shadow: none !important; border: none !important; margin: 0 !important; }
+  body.nyomtat .nyomtatando::before { display: none !important; }
+  body.nyomtat .nyomtatando .nap-fej { display: none !important; }
+  body.nyomtat .nyomtatando .nap-body { display: block !important; padding: 0 !important; max-height: none !important; }
+  body.nyomtat .nyomtat-gomb-sor { display: none !important; }
+  body.nyomtat { background: #ffffff !important; }
+  body.nyomtat .fo { padding: 0 !important; max-width: none !important; }
+  /* sötét panelek nyomtatóbarát változata */
+  body.nyomtat .os-bevez, body.nyomtat .os-tanacs {
+    background: #ffffff !important; border: 1.5px solid #888 !important;
+  }
+  body.nyomtat .os-bevez-cim, body.nyomtat .os-tanacs-szov { color: #1a1f2e !important; }
+  body.nyomtat .os-bevez-katlb, body.nyomtat .os-bevez-alcim, body.nyomtat .os-tanacs-cim { color: #555 !important; }
+  /* szép oldaltörések */
+  body.nyomtat .os-tetel { page-break-inside: avoid; }
+  body.nyomtat .os-tanacs { page-break-inside: avoid; }
+  @page { margin: 14mm; }
+}
+
+/* ═══════════ GYAKORLÓ MÓD ═══════════ */
+.gyakorlo-gomb {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; padding: 8px 16px; border-radius: 4px; margin-right: 8px;
+  border: 1px solid var(--kek); background: #ffffff; color: var(--kek); transition: all 0.15s;
+}
+.gyakorlo-gomb:hover, .gyakorlo-gomb.aktiv { background: var(--kek); color: #ffffff; }
+.gyakorlo-segito {
+  display: none; margin: 0 0 14px; padding: 9px 13px;
+  background: rgba(44,74,107,0.07); border-left: 3px solid var(--kek); border-radius: 0 3px 3px 0;
+  font-family: 'EB Garamond', serif; font-size: 13.5px; font-style: italic; color: var(--tinta-vilagos);
+}
+.gyakorlo-mod .gyakorlo-segito { display: block; }
+.gyakorlo-mod .gy-valasz { display: none; }
+.gyakorlo-mod .gy-kerdes { cursor: pointer; padding: 3px 6px; border-radius: 3px; transition: background 0.12s; }
+.gyakorlo-mod .gy-kerdes:hover { background: rgba(184,146,58,0.10); }
+.gyakorlo-mod .gy-kerdes:not(.feldve)::after {
+  content: " ▸ felfedés"; color: var(--arany-melyebb);
+  font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+}
+.gyakorlo-mod .gy-kerdes.feldve { background: rgba(58,106,74,0.07); }
+.gyakorlo-mod .gy-kerdes.feldve .gy-valasz { display: inline; }
+@media print {
+  /* nyomtatáskor a válasz mindig látszódjon, a gyakorló gomb ne */
+  body.nyomtat .gy-valasz { display: inline !important; }
+  body.nyomtat .gyakorlo-segito { display: none !important; }
+}
+
+/* ═══════════ KÉRDÉSSOR-INTEGRÁCIÓ ═══════════ */
+.kerdessor-gomb {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; padding: 8px 16px; border-radius: 4px; margin-right: 8px;
+  border: 1px solid #3a6a4a; background: #3a6a4a; color: #ffffff; text-decoration: none;
+  display: inline-block; transition: all 0.15s;
+}
+.kerdessor-gomb:hover { background: #2c5038; border-color: #2c5038; }
+.kulso-wrap { min-width: 200px; }
+.kulso-cim {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--arany-melyebb); margin-bottom: 5px;
+}
+.kulso-linkek { display: flex; flex-wrap: wrap; gap: 6px; }
+.kulso-linkek a {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+  text-decoration: none; color: #3a6a4a; background: #ffffff;
+  border: 1px solid #3a6a4a; border-radius: 12px; padding: 4px 11px; transition: all 0.15s;
+}
+.kulso-linkek a:hover { background: #3a6a4a; color: #ffffff; }
+@media print { body.nyomtat .kerdessor-gomb { display: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="fejlec">
+  <div class="fejlec-belso">
+    <div class="fejlec-kategoria">Felkészülési Tanmenet · 2026</div>
+    <h1>Államigazgatás <em>választható vizsgarész</em></h1>
+    <div class="fejlec-alcim">Írásbeli vizsga · október 19. — november 10.</div>
+    <div class="fejlec-stat">
+      <div class="stat-elem">
+        <div class="stat-szam">31</div>
+        <div class="stat-felirat">Fő tétel</div>
+      </div>
+      <div class="stat-elem">
+        <div class="stat-szam">44</div>
+        <div class="stat-felirat">10p kérdés</div>
+      </div>
+      <div class="stat-elem">
+        <div class="stat-szam">51</div>
+        <div class="stat-felirat">5p kérdés</div>
+      </div>
+      <div class="stat-elem">
+        <div class="stat-szam">3</div>
+        <div class="stat-felirat">Hét</div>
+      </div>
+      <div class="stat-elem">
+        <div class="stat-szam" style="font-style:italic">nov. 10.</div>
+        <div class="stat-felirat">Vizsga</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="vezerlo">
+  <div class="kereso-wrap">
+    <input id="kereso" type="text" placeholder="🔍 Keresés tételek és kérdések között…" autocomplete="off">
+    <div id="keresoEred" class="kereso-eredmeny"></div>
+  </div>
+  <div class="halado-wrap">
+    <div class="halado-szoveg"><span id="haladoSzam">0</span> / <span id="haladoOssz">0</span> nap kész</div>
+    <div class="halado-sav"><div id="haladoKitolt" class="halado-kitolt"></div></div>
+  </div>
+  <div class="kulso-wrap">
+    <div class="kulso-cim">🎯 Aktív gyakorlás (kérdéssor)</div>
+    <div class="kulso-linkek">
+      <a href="https://kissati84.github.io/szakvizsga-kerdessor-valszthato/kerdessor_allamigazgatas_2026.html" target="_blank" rel="noopener">Kérdéssor</a>
+      <a href="https://kissati84.github.io/szakvizsga-kerdessor-valszthato/probateszt_allamigazgatas_2026.html" target="_blank" rel="noopener">Próbateszt</a>
+      <a href="https://kissati84.github.io/szakvizsga-kerdessor-valszthato/fogalomtar_allamigazgatas.html" target="_blank" rel="noopener">Fogalomtár</a>
+      <a href="https://kissati84.github.io/szakvizsga-kerdessor-valszthato/statisztika_allamigazgatas.html" target="_blank" rel="noopener">Statisztika</a>
+    </div>
+  </div>
+</div>
+
+
+<nav class="nav-wrapper">
+  <div class="nav-belso" id="navBar"></div>
+  <div class="nap-nav" id="napNav"></div>
+</nav>
+
+<main class="fo" id="fo"></main>
+
+<script>
+
+
+// ═══════════ ÖSSZEFOGLALÓK ═══════════
+var OSSZEF={};
+OSSZEF.h1='<div class="os-bevez"><div class="os-bevez-katlb">Szombati Ismétlés · 1. Hét</div><div class="os-bevez-cim">Államigazgatás — Összefoglaló</div><div class="os-bevez-alcim">Alkotmányos alapok és szervezetrendszer · Á/1—Á/11.</div></div><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/1.</div><div class="os-tetel-cim">A hatalommegosztás átalakulása</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A klasszikus elmélet</div><ul class="os-lista"><li><span class="os-kulcs">Montesquieu</span> (A törvények szelleméről): a három hatalmi ág — <span class="os-kulcs">törvényhozó, végrehajtó, bírói</span> — személyileg és szervezetileg is elkülönül</li><li>Cél: a <span class="os-tul">zsarnokság kiküszöbölése</span>, a törvények uralmának biztosítása</li><li><span class="os-kulcs">Kölcsönös függőség és ellenőrzés</span> — fékek és ellensúlyok</li></ul></div><div class="os-szek"><div class="os-szek-cim">A hatalommegosztás 3 alapvető formája</div><ol class="os-szam"><li><span class="os-kulcs">Klasszikus</span> — leginkább az amerikai prezidenciális (elnöki) rendszerben</li><li><span class="os-kulcs">Kétkamarás törvényhozás</span> — alsó-/felsőház (Mo. egykamarás!)</li><li><span class="os-kulcs">Föderalizmus</span> — szövetségi és tartományi szint (USA, Németország, Ausztria, Svájc)</li></ol></div><div class="os-szek"><div class="os-szek-cim">Az átalakulás okai</div><ul class="os-lista"><li>Montesquieu az <span class="os-kulcs">alkotmányos monarchiára</span> alkotta meg elméletét — köztársasági és modern parlamentáris rendszerben nehezen alkalmazható</li><li>Modern parlamentáris rendszerben (Mo. 1989 óta): a törvényhozás <span class="os-tul">nem ellensúlya, hanem partnere</span> a végrehajtó hatalomnak</li><li>Az egyensúlyt <span class="os-kulcs">semleges/független szervek</span> biztosítják: ÁSZ, ombudsman, Alkotmánybíróság</li></ul></div><div class="os-szek"><div class="os-szek-cim">Történeti előzmények, elméletek</div><ul class="os-lista"><li><span class="os-kulcs">Arisztotelész</span> (Politika) → középkor (világi-egyházi hatalom) → <span class="os-kulcs">John Locke</span> (törvényhozó, végrehajtó, föderatív) → <span class="os-kulcs">Montesquieu</span></li><li><span class="os-ev">1787</span> az USA alkotmánya</li><li><span class="os-kulcs">Benjamin Constant</span>: az <span class="os-tul">államfői hatalom</span> (semleges hatalom) teremti meg az egyensúlyt a hatalmi ágak között</li><li>Hatalommegosztást <span class="os-kulcs">elutasító</span> elméletek: fejedelmi szuverenitás (Laband), népszuverenitás (Rousseau), államhatalom egysége (marxista)</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>1.</strong> A hatalommegosztás klasszikus elmélete — Arisztotelész → Locke (törvényhozó, végrehajtó, föderatív) → <span class="os-kulcs">Montesquieu</span> („A törvények szelleméről"): <span class="os-kulcs">törvényhozó, végrehajtó, bírói</span> hatalom; személyileg-szervezetileg elkülönülnek és ellensúlyozzák egymást — cél a zsarnokság kiküszöbölése, a szabadság biztosítása.</li><li><strong>2.</strong> A fékek és ellensúlyok rendszere — a hatalmi ágak <span class="os-kulcs">egymást ellenőrzik, fékezik</span> (checks and balances); egyik ág sem vonhatja el a másik jogosítványait. A hatalom nem korlátlan — kölcsönös függés és ellensúly.</li><li><strong>3.</strong> Az igazgatási hatalom elmélete — a XIX. sz. vége–XX. sz. eleje, a közigazgatás túlterjeszkedésére adott válasz; <span class="os-kulcs">negyedik hatalmi ágként</span>. Az USA-ban: a Kongresszus által létrehozott, az elnöki adminisztrációtól független „nagy közigazgatási bizottságok" testesítik meg.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/2.</div><div class="os-tetel-cim">Az Országgyűlés és a Kormány viszonya</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A kormányforma</div><ul class="os-lista"><li>Magyarország kormányformája: <span class="os-kulcs">parlamentáris köztársaság</span></li><li>A végrehajtó hatalom a törvényhozástól nyeri megbízatását; feltétele, hogy a Kormány <span class="os-tul">bírja a törvényhozás bizalmát</span></li><li><span class="os-kulcs">Alaptörvény 15. cikk (1)</span>: a végrehajtó hatalom általános szerve a Kormány, amely az Ogynek felelős</li></ul></div><div class="os-szek"><div class="os-szek-cim">Bizalmi viszony</div><ul class="os-lista"><li>A miniszterelnököt — a K.eln. javaslatára — az <span class="os-kulcs">Ogy választja</span></li><li><span class="os-kulcs">Konstruktív bizalmatlanság</span>: a miniszterelnökkel szemben, egyidejűleg új miniszterelnök választásával</li><li><span class="os-kulcs">Bizalmi szavazás</span>: a miniszterelnök indítványozhatja; ha a képviselők több mint fele nem támogatja → megszűnik a megbízatása</li><li>A miniszterek kinevezésébe az Ogy beleszólása <span class="os-tul">formális</span> (bizottsági meghallgatás, de nem kötelező; csak elmaradása akadály)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Az Ogy ellenőrző tevékenysége</div><ul class="os-lista"><li><span class="os-kulcs">Ellenőrzés</span> — önálló alkotmányos funkció (plénum + bizottságok)</li><li><span class="os-kulcs">Politikai vitanap</span> — indítványtól számított <span class="os-tul">14-28 nap</span> között</li><li><span class="os-kulcs">Beszámolók, jelentések</span></li><li><span class="os-kulcs">Interpelláció</span> — Kormányhoz/tagjához, <span class="os-tul">viszontválasz van</span></li><li><span class="os-kulcs">Kérdés</span> — Kormányhoz, ombudsmanhoz, legfőbb ügyészhez, ÁSZ-/MNB-elnökhöz, <span class="os-tul">nincs viszontválasz</span></li></ul></div><div class="os-megj">💡 A Kormány <span class="os-kulcs">nem oszlathatja fel az Ogyt</span>, és nincs törvényalkotási vétója.</div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/3.</div><div class="os-tetel-cim">A köztársasági elnök és a Kormány viszonya</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Az államfő alkotmányos helye</div><ul class="os-lista"><li><span class="os-kulcs">Magyarország államfője</span>, kifejezi a nemzet egységét, őrködik az államszervezet demokratikus működése felett (Alaptörvény 9. cikk)</li><li>Ogy választja <span class="os-tul">5 évre</span>, 35. életévét betöltött magyar állampolgár, <span class="os-tul">egyszer újraválasztható</span></li><li>NEM része a végrehajtó hatalomnak; semleges, egyensúlyozó szerep</li></ul></div><div class="os-szek"><div class="os-szek-cim">Ellenjegyzést NEM igénylő jogkörök</div><ul class="os-lista"><li>Képviseli Magyarországot; törvényt és népszavazást kezdeményezhet</li><li>Kitűzi a választás és népszavazás időpontját; összehívja az Ogy alakuló ülését</li><li><span class="os-kulcs">Feloszlathatja az Országgyűlést</span></li><li><span class="os-kulcs">Politikai és alkotmányos vétójog</span> (de ha az Ogy ismét elfogadja, alá kell írnia — <span class="os-tul">formális vétó</span>)</li><li>Kinevezi a hivatásos bírákat és a Költségvetési Tanács elnökét</li></ul></div><div class="os-szek"><div class="os-szek-cim">Az Ogy feloszlatásának esetei</div><ul class="os-lista"><li>A Kormány megbízatása megszűnik, és a javasolt személyt <span class="os-tul">40 napon belül</span> nem választják meg</li><li>Ha <span class="os-tul">március 31-ig</span> a költségvetést nem fogadják el (<span class="os-kulcs">indemnitás, ex lex állapot</span>)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Ellenjegyzéshez kötött jogkörök</div><ul class="os-lista"><li>Nemzetközi szerződések; nagykövetek megbízása-fogadása</li><li>Miniszterek, MNB-elnök, önálló szabályozó szerv vezetője, egyetemi tanárok kinevezése</li><li>Tábornokok kinevezése-előléptetése; kitüntetések; <span class="os-kulcs">egyéni kegyelem</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>12.</strong> Területszervezési döntések (Ogy / köztárs. elnök) — <span class="os-kulcs">Országgyűlés</span>: az állam területi tagozódása, a vármegyék összevonása-szétválasztása-elnevezése-székhelye, fővárosi kerületek. <span class="os-kulcs">Köztársasági elnök</span>: városi cím, község alakítása-egyesítése, város/község elnevezése (a Kormány előkészíti; K.eln. döntéséhez ellenjegyzés kell).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/4.</div><div class="os-tetel-cim">ÁSZ és az alapvető jogok biztosa — ellenőrzés</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Közös: mindkettő az Országgyűlés ellenőrző szerve</div><div class="os-grid"><div><div class="alcim">Állami Számvevőszék</div><span class="os-kulcs">Pénzügyi és gazdasági</span> ellenőrzés; <span class="os-tul">valamennyi közigazgatási szerv gazdálkodása</span>; törvényesség + célszerűség + eredményesség</div><div><div class="alcim">Alapvető jogok biztosa</div><span class="os-kulcs">Alapjogvédelem</span>; hatáskör a <span class="os-tul">közigazgatás egészére</span> (kivéve Ogy, K.eln., AB, ÁSZ, bíróság, ügyészség)</div></div></div><div class="os-szek"><div class="os-szek-cim">Megbízatás</div><div class="os-grid"><div><div class="alcim">ÁSZ elnök</div>Ogy választja <span class="os-tul">12 évre</span>; az ÁSZ elnöke a Költségvetési Tanács tagja</div><div><div class="alcim">Ombudsman</div>Ogy választja a K.eln. javaslatára <span class="os-tul">6 évre</span> (helyetteseivel); eljárását <span class="os-kulcs">bárki kezdeményezheti</span></div></div></div><div class="os-szek"><div class="os-szek-cim">Eszközök</div><div class="os-grid"><div><div class="alcim">ÁSZ</div><span class="os-kulcs">Bírósághoz fordulhat</span>, nyilvánosságra hoz, <span class="os-kulcs">zárolhat</span>, felfüggesztheti a pénzeszközök felhasználását; akadályozása bűncselekmény</div><div><div class="alcim">Ombudsman</div><span class="os-kulcs">Érdemi intézkedési jogosultsága nincs</span>: ajánlás, bírósági/AB-eljárás kezdeményezése, nyilvánosság; 2021.01.01 óta egyenlő bánásmód ügyekben hatóságként jár el</div></div></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>5.</strong> Az igazságszolgáltatás és az államigazgatás viszonya — a bíróság <span class="os-kulcs">független</span> a végrehajtó hatalomtól; dönt a <span class="os-kulcs">közigazgatási határozatok törvényességéről</span>, az önkormányzati rendelet más jogszabályba ütközéséről, a jogalkotási mulasztásról. Közigazgatási perben (Kp., 2017. évi I. tv.) megsemmisíti/megváltoztatja a jogsértő döntést.</li><li><strong>6.</strong> Az ügyészség és az államigazgatás viszonya — az ügyészség az <span class="os-kulcs">Országgyűlésnek alárendelt</span> (nem a kormánynak); a közérdek védelmében <span class="os-kulcs">ellenőrzi a hatósági döntések törvényességét</span>, fellép, hatósági eljárást kezdeményez, jogorvoslatot terjeszt elő, önkéntes teljesítésre hív fel.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>2.</strong> Az utólagos normakontroll — a jogalkotó államigazgatási szervek <span class="os-kulcs">normatív aktusai</span> (rendelet, normatív határozat/utasítás) az <span class="os-kulcs">Alkotmánybíróság</span> előtt megtámadhatók. Önkormányzati rendelet: Alaptörvénybe ütközés → AB; más jogszabályba ütközés → <span class="os-kulcs">Kúria</span>.</li><li><strong>3.</strong> Az alapvető jogok biztosa és eszközei — <span class="os-kulcs">ombudsman</span>; alapjogvédelem, eljárását <span class="os-kulcs">bárki kezdeményezheti</span>, az Ogy választja. <span class="os-kulcs">Érdemi intézkedési joga nincs</span>: ajánlás, bírósági/AB-eljárás kezdeményezése, nyilvánosság.</li><li><strong>4.</strong> Az Állami Számvevőszék és eszközei — az Ogy pénzügyi-gazdasági ellenőrző szerve; valamennyi közigazgatási szerv gazdálkodását ellenőrzi. Eszközök: bírósághoz fordulhat, nyilvánosságra hoz, <span class="os-kulcs">zárolhat</span>, felfüggesztheti a pénzeszközök felhasználását; akadályozása bűncselekmény.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/5.</div><div class="os-tetel-cim">A magyar közigazgatás alrendszerei</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Két alrendszer</div><ul class="os-lista"><li><span class="os-kulcs">Államigazgatási szervek</span> — az országos jelentőségű (össztársadalmi) ügyek intézése; az állam felel értük</li><li><span class="os-kulcs">Helyi önkormányzatok</span> — a helyi közügyek; a választott, közhatalommal felruházott helyi szervek felelnek értük</li></ul></div><div class="os-szek"><div class="os-szek-cim">Közös tulajdonságok</div><ul class="os-lista"><li>Feladataikat <span class="os-kulcs">jogszabályok</span> határozzák meg</li><li><span class="os-kulcs">Közfeladatok</span> ellátására hivatottak, <span class="os-kulcs">közpénzből</span> működnek, tulajdonuk <span class="os-kulcs">köztulajdon</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Kapcsolódási pontok</div><ol class="os-szam"><li><span class="os-kulcs">Törvényességi felügyelet</span> — a Kormány (KTM irányításával, korm.hivatalok útján) biztosítja az önkormányzatok jogszerű működését</li><li><span class="os-kulcs">Államigazgatási (delegált) feladatok</span> — önkormányzati szervek látják el; e körben utasítás nem adható, felül nem bírálható</li><li><span class="os-kulcs">Területszervezési döntések</span> — részben Ogy (megyék, főváros), részben K.eln. (város, község)</li><li><span class="os-kulcs">Véleményezési és javaslattételi jog</span> — megkeresésre <span class="os-tul">30 napon belül</span> érdemi válasz (8 napon belül áttétel, ha nem hatáskör)</li></ol></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>1.</strong> A municipiális hatalom — a helyi <span class="os-kulcs">önkormányzatiság mint önálló hatalmi tényező</span> (Benjamin Constant; Mo.-on 1848, Eötvös József). A végrehajtó hatalom dominanciájának megtörése a hatalom széttöredezésével.</li><li><strong>5.</strong> A véleményezési és javaslattételi jog — a helyi önkormányzat a feladat-/hatáskörrel rendelkező szervtől <span class="os-kulcs">tájékoztatást kérhet, döntést kezdeményezhet, véleményt nyilváníthat</span>; a megkeresett szerv <span class="os-ev">30 napon belül</span> érdemben válaszol (8 napon belül átteszi, ha nem hatásköre).</li><li><strong>6.</strong> Az alrendszerek kapcsolódási pontjai — közpénzből működnek; <span class="os-kulcs">törvényességi felügyelet</span> (legjelentősebb), átruházott államigazgatási feladatok, <span class="os-kulcs">területszervezés</span>, véleményezési-javaslattételi jog.</li><li><strong>7.</strong> A tutela (állami gyámkodás) — a központi államigazgatás és a korlátozott autonómiájú önkormányzat közötti <span class="os-kulcs">szigorú, célszerűségi és előzetes felügyelet</span>. A modern rendszerekben helyette <span class="os-kulcs">utólagos, törvényességi</span> felügyelet van.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/6.</div><div class="os-tetel-cim">Decentralizált és dekoncentrált szervek</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Kiindulás: centralizáció vs. decentralizáció</div><ul class="os-lista"><li>Államszervezési elvek; két követelmény: a közigazgatás <span class="os-kulcs">egysége</span> + <span class="os-kulcs">alkalmazkodás</span> a helyi sajátosságokhoz</li><li><span class="os-kulcs">Centralizáció</span>: egy helyre összpontosul az irányítás → mereven hierarchikus, önmagában működésképtelen</li><li><span class="os-kulcs">Dekoncentráció</span>: a centralizáció kiegészítése — helyi jelentőségű ügyekben döntési jog a központ kinevezett hivatalnokainak</li></ul></div><div class="os-szek"><div class="os-szek-cim">Dekoncentrált szervek</div><ul class="os-lista"><li><span class="os-kulcs">Centralizált</span> rendszer része; a központi szerv helyi kirendeltsége</li><li>Döntéseiket <span class="os-tul">állami hivatalnokok</span> hozzák az állam nevében; vezetőit a felettes szerv nevezi ki</li><li>Hierarchikus alárendeltség; személyi állomány: <span class="os-kulcs">kormánytisztviselő</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Decentralizált szervek</div><ul class="os-lista"><li>Jogilag és szervezetileg <span class="os-kulcs">önállóan</span> működő szervek látnak el közfeladatot, autonómia birtokában</li><li><span class="os-kulcs">Területi decentralizáció</span> → helyi önkormányzat · <span class="os-kulcs">funkcionális decentralizáció</span> → kórház, iskola, posta</li><li>Választott vezetők; nincs hierarchikus felettes; személyi állomány: <span class="os-kulcs">köztisztviselő</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Közös sajátosság</div><ul class="os-lista"><li>Céljuk azonos: <span class="os-kulcs">közelebb hozni a közigazgatást</span> az igazgatottakhoz, érvényesíteni a helyi sajátosságokat, hatékonyabbá tenni a működést</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>9.</strong> A decentralizáció előnyei és hátrányai — <span class="os-kulcs">Előnyök</span>: önigazgatás, közvetítő közeg a központ és az igazgatottak között, munkamegosztás, a feladatot a leghatékonyabban ellátóra bízzák. <span class="os-kulcs">Hátrányok</span>: erősíti a partikularizmust, gyengítheti a nemzeti egységet, helyi érdekcsoportok befolyása, szakértelem hiánya.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>10.</strong> A centralizáció előnyei és hátrányai — az állam minden feladatot magára vállal; az <span class="os-kulcs">abszolút centralizáció működésképtelen</span> → kiegészül a dekoncentrációval. <span class="os-kulcs">Előny</span>: gyengíti a partikularizmust, erősíti a nemzeti egységet, megakadályozza a helyi érdekcsoportok befolyását.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/7.</div><div class="os-tetel-cim">Az államigazgatási szervek csoportosítása</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Tipikus államigazgatási szervek</div><ul class="os-lista"><li><span class="os-kulcs">Kormány</span> — általános hatáskörű csúcsszerv</li><li><span class="os-kulcs">Minisztériumok</span>, <span class="os-kulcs">Miniszterelnökség, Miniszterelnöki Kormányiroda</span></li><li><span class="os-kulcs">Központi hivatalok</span> — miniszter irányítása alatt</li><li><span class="os-kulcs">Kormányzati főhivatalok</span> — a Kormány irányítása alatt, Ksztv./Kit. nevesíti</li><li><span class="os-kulcs">Területi szervek</span> — fővárosi és vármegyei kormányhivatalok, járási hivatalok</li></ul></div><div class="os-szek"><div class="os-szek-cim">Atipikus szervek</div><ul class="os-lista"><li><span class="os-kulcs">Autonóm államigazgatási szervek</span> — pl. KEHI, GVH, NAV nem; függetlenebbek</li><li><span class="os-kulcs">Önálló szabályozó szervek</span> — pl. NMHH, MEKH, SZTFH (rendeletalkotási joggal)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Az elhatárolás egyik alapja: civil vs. rendészeti</div><div class="os-grid"><div><div class="alcim">Civil államigazgatási szerv</div>Dolgozóik <span class="os-kulcs">kormánytisztviselők/köztisztviselők</span></div><div><div class="alcim">Rendészeti (rendvédelmi) szerv</div><span class="os-kulcs">Hivatásos szolgálati jogviszony</span>; rendőrség, BV, katasztrófavédelem, nemzetbiztonsági szolgálatok (Ksztv.); 2019-től rendvédelmi igazgatási alkalmazotti jogviszony</div></div></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>10.</strong> Az államigazgatási szervek csoportosítása — <span class="os-kulcs">tipikus</span> (hierarchikus, kormány irányítása alatt) vs. <span class="os-kulcs">atipikus</span> (önálló szabályozó + autonóm); földrajzilag: központi / területi / helyi; vezetés: egyszemélyi / testületi; hatáskör: általános / különös; <span class="os-kulcs">civil / rendészeti</span>.</li><li><strong>19.</strong> Kormányzati főhivatal és központi hivatal — azonosságok — mindkettő <span class="os-kulcs">szakmai munkát</span> végez (politikai döntés-végrehajtás), egyszemélyi vezetés, vezetőjük nem miniszter (nincs önálló ágazatirányítás), kormányzati szolgálati jogviszonyú felsővezető, SZMSZ határozza meg a struktúrát.</li><li><strong>20.</strong> Kormányzati főhivatal és központi hivatal — különbségek — <span class="os-kulcs">Kormányzati főhivatal</span> (2 db, pl. KSH, SZTNH): csak <span class="os-kulcs">törvény</span> hozza létre, a Kit. tételesen felsorolja, a Kormány irányítja, feladatkörében nem utasítható. <span class="os-kulcs">Központi hivatal</span>: Kormány (rendelettel) vagy tv. hozza létre, miniszter irányítja, kormányrendelet határozza meg a hatáskörét.</li><li><strong>21.</strong> Az autonóm államigazgatási szervek — nagyfokú <span class="os-kulcs">önállóság</span>, nem a kormány irányítása alatt; főként hatósági jogalkalmazás, <span class="os-kulcs">politikai semlegesség</span>. Ogy hozza létre törvénnyel, Ogy ellenőrzi, nem utasíthatók, költségvetésüket a kormány nem csökkentheti. Pl. GVH, NAIH, NVI, Integritás Hatóság. <span class="os-kulcs">Rendeletalkotási joguk nincs</span>.</li><li><strong>25.</strong> Közintézeti és közüzemi szervek — közszolgáltatást ellátó intézeti típusú szervek. <span class="os-kulcs">Közintézet</span>: humán közszolgáltatás (oktatás, egészségügy, kultúra), ingyenes/közvetett finanszírozás, <span class="os-kulcs">közalkalmazottak</span>, költségvetési szerv. <span class="os-kulcs">Közüzem</span>: gazdasági közszolgáltatás piaci áron (közművek, tömegközlekedés), <span class="os-kulcs">munkaviszony</span>.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>11.</strong> Az illetékesség — területi alapú <span class="os-kulcs">munkamegosztás</span> az államigazgatásban. Az illetékességi terület és az illetékességi okok (jogszabály határozza meg) együtt döntik el, az azonos hatáskörűek közül <span class="os-kulcs">melyik szerv</span> jár el (pl. ügyfél lakóhelye, ingatlan fekvése).</li><li><strong>25.</strong> A közszolgáltatások ellátásának formái — jellemzően nem maga az államigazgatási szerv látja el, hanem <span class="os-kulcs">intézeti típusú szervet</span> alapít: <span class="os-kulcs">közintézet</span> (közfeladatra létrejött jogi személy) és <span class="os-kulcs">közüzem</span> (alapvető szolgáltatások folyamatos biztosítása).</li><li><strong>27.</strong> Az ex lege szabályozási mód — a jogalanyokra <span class="os-kulcs">közvetlenül</span> ható szabályozási mód (szemben a hatósági jogalkalmazással, ahol egyedi aktussal érvényesítik a jogot); a jogalanyok <span class="os-kulcs">önkéntes jogkövetéssel</span> érvényesítik a normát. A hatósági felügyelet ehhez kötődik.</li><li><strong>28.</strong> Az intézeti típusú szerv — közszolgáltatás ellátására létrehozott szervtípus; két fajta: <span class="os-kulcs">közintézet</span> (humán, nem piaci ár) és <span class="os-kulcs">közüzem</span> (gazdasági, piaci ár). Az elhatárolás alapja a közszolgáltatás jellege (viszonylagos).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/8.</div><div class="os-tetel-cim">Az irányítás fogalma, eszközei, típusai</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Fogalom</div><ul class="os-lista"><li>Az <span class="os-kulcs">irányítás, felügyelet, ellenőrzés</span> szervezetek közötti viszonyt írnak le</li><li>Aki irányít, <span class="os-tul">nem része</span> az irányított szervezetnek; az ellenőrzés mindkettő részjogosítványa</li><li>Az irányítás ad lehetőséget a <span class="os-kulcs">legintenzívebb és legteljesebb akaratérvényesítésre</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Eszközök (Ksztv./Kit.)</div><ul class="os-lista"><li>Szerv <span class="os-kulcs">alapítása, átalakítása, megszüntetése</span></li><li>Vezető <span class="os-kulcs">kinevezése, felmentése</span></li><li><span class="os-kulcs">Törvényességi, szakszerűségi, hatékonysági, pénzügyi ellenőrzés</span></li><li>SZMSZ jóváhagyása; döntés megsemmisítése; <span class="os-kulcs">egyedi utasítás</span>; jelentéstételre kötelezés</li></ul></div><div class="os-szek"><div class="os-szek-cim">Jellemzők</div><ul class="os-lista"><li>Az irányított <span class="os-kulcs">teljes szervezeti alárendeltségét</span> eredményezi</li><li><span class="os-tul">Nem korlátlan</span>, jogszabályt nem sérthet; legismertebb korlátja a <span class="os-kulcs">hatáskörelvonás tilalma</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Fajtái</div><ul class="os-lista"><li><span class="os-kulcs">Szakmai irányítás</span> — csak a szakmai tevékenységre</li><li><span class="os-kulcs">Szervezetirányítás</span> — a szervezeti működésre (nem szakmaspecifikus)</li><li><span class="os-kulcs">Teljes irányítás</span> = szakmai + szervezetirányítás</li></ul></div><div class="os-megj">💡 A <span class="os-kulcs">felügyelet</span> nem eredményez teljes szervezeti alárendeltséget — kevesebb rendelkezési joggal jár, mint az irányítás.</div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>11.</strong> Irányítás, felügyelet, ellenőrzés elhatárolása — szervek közötti viszony, eltérő <span class="os-kulcs">akaratérvényesítési erősséggel</span>. <span class="os-kulcs">Irányítás</span>: legintenzívebb, hierarchikus, eszköze a felügyelet és az ellenőrzés is. <span class="os-kulcs">Felügyelet</span>: nem teljes alárendeltség, korlátozott. <span class="os-kulcs">Ellenőrzés</span>: szervezeten belül is, az irányítás/felügyelet részjogosítványa.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>14.</strong> Az irányítás fajtái (irányultság szerint) — <span class="os-kulcs">szakmai irányítás</span> (csak a szakmai tevékenységre, ágazatonként eltérő), <span class="os-kulcs">szervezetirányítás</span> (a szervezeti működésre, minden szervnél azonos), <span class="os-kulcs">teljes irányítás</span> (mindkettő, legszigorúbb).</li><li><strong>15.</strong> Irányítás és vezetés — az <span class="os-kulcs">irányítás szervek közötti</span> kapcsolat (az irányító nem része az irányítottnak); a <span class="os-kulcs">vezetés szervezeten belüli</span> (a vezető része a szervezetnek). Közös: hierarchikus viszony, az ellenőrzés mindkettő részjogosítványa.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/9.</div><div class="os-tetel-cim">A Kormány fogalma, funkciói, összetétele</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Fogalom</div><ul class="os-lista"><li>Az <span class="os-kulcs">államigazgatás általános hatáskörű szerve</span>; az Alaptörvény szerint a <span class="os-kulcs">végrehajtó hatalom általános szerve</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Kettős funkció</div><ul class="os-lista"><li><span class="os-kulcs">Kormányzati tevékenység</span> — középpontban a politikai döntések</li><li><span class="os-kulcs">Közigazgatási (államigazgatási) feladatok</span> — a politikai döntések előkészítése, végrehajtása</li></ul></div><div class="os-szek"><div class="os-szek-cim">Összetétel</div><ul class="os-lista"><li>A <span class="os-kulcs">miniszterelnökből és a miniszterekből</span> áll</li><li>A <span class="os-kulcs">minisztereket</span> a miniszterelnök javaslatára a K.eln. nevezi ki</li><li>A <span class="os-kulcs">miniszterelnököt</span> az Ogy választja a K.eln. javaslatára, a képviselők <span class="os-tul">több mint felének</span> szavazatával</li></ul></div><div class="os-szek"><div class="os-szek-cim">A miniszterelnök kiemelkedő szerepe</div><ul class="os-lista"><li>Ő határozza meg a Kormány <span class="os-kulcs">általános politikáját</span></li><li>A Kormány megbízatása a <span class="os-tul">miniszterelnök megbízatásához kötött</span></li><li>Kijelöli helyettesét; <span class="os-kulcs">feladatot szabhat</span> a kormánytagoknak; a Kormány döntését ő mondja ki és írja alá</li><li>A Kormány döntése: <span class="os-kulcs">rendelet, határozat, irányelv vagy elvi állásfoglalás</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>4.</strong> A Kormány és az államigazgatás viszonya — a Kormány az <span class="os-kulcs">államigazgatás csúcsszerve</span> (a hagyományos, hierarchikus szervekre igaz; az autonóm/önálló szervekre nem). Az Alaptörvény 15. cikk: a Kormány a <span class="os-kulcs">végrehajtó hatalom általános, a közigazgatás legfőbb szerve</span>, államigazgatási szerveket hozhat létre. A kormány és az államigazgatás egységes hatalmi centrum.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>17.</strong> A tárca nélküli miniszter — az Alaptörvény lehetővé teszi a Kormány által meghatározott feladatkörre; <span class="os-kulcs">részletes feladatkörét kormányrendelet</span> állapítja meg, tevékenységét kijelölt minisztérium segíti. 2022 óta feladatkör-megnevezéssel nevezik ki őket.</li><li><strong>24.</strong> Az Áht. szerinti irányítási hatáskörök (5+) — a költségvetési szerv <span class="os-kulcs">alapítása-átalakítása-megszüntetése</span>, SZMSZ jóváhagyása, <span class="os-kulcs">vezető kinevezése-felmentése</span>, gazdasági vezető, törvényességi-szakszerűségi-hatékonysági ellenőrzés, döntés megsemmisítése, jóváhagyás, <span class="os-kulcs">egyedi utasítás</span>, jelentéstételre kötelezés, adatkezelés.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/10.</div><div class="os-tetel-cim">A Kormány működése (kormányülés)</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A kormányülés</div><ul class="os-lista"><li>A Kormány <span class="os-kulcs">testületi szervként</span>, ülésein működik</li><li>Az ülést a <span class="os-kulcs">miniszterelnök</span> vezeti</li><li>A döntéseket a Kormány <span class="os-kulcs">ülésén hozza</span>; a döntés szövegének véglegesítését a miniszterelnök írja alá</li></ul></div><div class="os-szek"><div class="os-szek-cim">A Kormány döntései (forma szerint)</div><ul class="os-lista"><li><span class="os-kulcs">Rendelet</span> — jogszabály</li><li><span class="os-kulcs">Határozat</span></li><li><span class="os-kulcs">Irányelv</span> vagy <span class="os-kulcs">elvi állásfoglalás</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">A miniszterelnök ülésvezetési jogosítványai</div><ul class="os-lista"><li>Összehívja és vezeti az ülést, megállapítja a napirendet</li><li>Kimondja a döntést, dönt a szavazás módjáról</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>19.</strong> A Kormány döntései (forma szerint) — a Kormány testületi szerv, döntéseit a kormányülésen hozza; szakmai előkészítő fórum a KÁT és az FKB. A döntés formája: <span class="os-kulcs">rendelet, határozat, irányelv vagy elvi állásfoglalás</span>; a miniszterelnök mondja ki és írja alá.</li><li><strong>20.</strong> A miniszterelnök ülésvezetési jogosítványai — a Kormány ülései <span class="os-kulcs">nem nyilvánosak</span>; a miniszterelnök vezetésével működik, ő készíti az ütemtervet, <span class="os-kulcs">kimondja és aláírja a döntést</span>, felmentést adhat a részvétel alól, beszámolásra hívhat fel. Hetente ülésezik, ügyrend szerint.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/11.</div><div class="os-tetel-cim">A kormányülés előkészítése; KÁT</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Az előkészítés szakaszai</div><ul class="os-lista"><li>Az előterjesztéseket <span class="os-kulcs">egyeztetni</span> kell az érintett szervekkel (közigazgatási egyeztetés)</li><li>A <span class="os-kulcs">Közigazgatási Államtitkári Értekezlet (KÁT)</span> minden kormány-előterjesztést előzetesen megtárgyal</li></ul></div><div class="os-szek"><div class="os-szek-cim">A KÁT</div><ul class="os-lista"><li>A Kormány <span class="os-kulcs">segédszerve</span>, a kormányülés előkészítő fóruma</li><li>Tagjai a <span class="os-kulcs">közigazgatási államtitkárok</span>; a Miniszterelnöki Kormányiroda közigazgatási államtitkára vezeti</li><li>Feladata: az előterjesztések <span class="os-tul">szakmai-közigazgatási</span> szempontú előzetes megtárgyalása, a viták feloldása az ülés előtt</li></ul></div></div></article><div class="os-tanacs"><div class="os-tanacs-cim">Szombati ismétlési tanács</div><div class="os-tanacs-szov">Az első hét anyaga: alkotmányos alapok és a szervezetrendszer. Próbálja meg fejből végigmondani a 11 tételt — a Kormány és segédszervei jövő héten folytatódnak.</div></div>';
+OSSZEF.h2='<div class="os-bevez"><div class="os-bevez-katlb">Szombati Ismétlés · 2. Hét</div><div class="os-bevez-cim">Államigazgatás (folytatás)</div><div class="os-bevez-alcim">Kormányszervek, területi igazgatás, funkciók · Á/12—Á/22.</div></div><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/12.</div><div class="os-tetel-cim">A kormánybiztos</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Fogalom és kinevezés</div><ul class="os-lista"><li>A Kormány <span class="os-kulcs">segédszerve</span>, egyszemélyi vezető</li><li>A <span class="os-kulcs">Kormány nevezi ki</span> a miniszterelnök javaslatára <span class="os-tul">normatív határozattal</span></li><li>Miniszter vagy kormányzati főhivatal feladatkörébe nem tartozó, vagy <span class="os-kulcs">kiemelt fontosságú</span> feladatra</li><li>Határozott időre, <span class="os-tul">legfeljebb 4 évre</span>; megbízatása a miniszterelnök megbízatásával megszűnik</li></ul></div><div class="os-szek"><div class="os-szek-cim">Jellemzők</div><ul class="os-lista"><li>A <span class="os-kulcs">Kormány helyett és nevében</span> jár el, döntéseket is hozhat</li><li>Kinevezése lehet <span class="os-kulcs">szakmai</span> (összetett feladat) vagy <span class="os-kulcs">politikai</span> (kiemelt ügy)</li><li>Kormányrendelet <span class="os-kulcs">irányítási jogkörrel</span> ruházhatja fel; <span class="os-tul">biztosi jogviszony</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Rokon tisztségek</div><ul class="os-lista"><li><span class="os-kulcs">Miniszterelnöki biztos</span> — a miniszterelnök nevezi ki, legfeljebb megbízatása végéig</li><li><span class="os-kulcs">Miniszterelnöki megbízott</span> — diplomáciai, tanácsadói, eseti feladatra</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/13.</div><div class="os-tetel-cim">Kormánybiztos és a többi segédszerv</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A Kormány segédszervei</div><ul class="os-lista"><li><span class="os-kulcs">Kabinet, kormánybizottság, KÁT</span>, egyéb javaslattevő/véleményező testületek</li><li><span class="os-kulcs">Kormánybiztos, miniszterelnöki biztos, miniszterelnöki megbízott, politikai igazgató</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">A kabinet</div><ul class="os-lista"><li><span class="os-tul">Törvény</span> ad felhatalmazást létrehozására; a Kormány ülései előtt <span class="os-kulcs">állásfoglalást ad</span></li><li>Funkciója a <span class="os-kulcs">koordináció</span>; főszabály szerint <span class="os-tul">nem hozhat döntést</span> a Kormány helyett</li><li>Jelenleg 4 kabinet: <span class="os-kulcs">Védelmi Tanács, Stratégiai, Gazdasági, Nemzetpolitikai Kabinet</span></li><li>Tagjai a feladatkörükben érintett miniszterek → <span class="os-tul">politikai karakter</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">A kormánybizottság</div><ul class="os-lista"><li>Több <span class="os-kulcs">igazgatási ágazatot érintő</span> ügyekre; ágazatok közötti együttműködés koordinálása</li><li>Tagjai az érintett miniszterek; <span class="os-tul">normatív kormányhatározat</span> hozza létre</li><li>Ügydöntő jogkör csak <span class="os-kulcs">törvény/kormányrendelet</span> felhatalmazásával</li></ul></div><div class="os-megj">💡 Közös vonás: a segédszervek a Kormány működésének ülésen kívüli formái, többségükben testületek. Különbség: a kormánybiztos <span class="os-kulcs">egyszemélyi</span>, a kabinet és kormánybizottság <span class="os-kulcs">testületi</span>.</div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>13.</strong> A Kormány kabinetjei — a Kormány <span class="os-kulcs">segédszerve, testülete</span>; a Ksztv. ad felhatalmazást. A kormányülés előtt <span class="os-kulcs">állásfoglalást ad</span> kiemelt ügyekben (funkció: javaslattétel, tanácsadás, döntés-előkészítés, koordináció). 4 kabinet (Stratégiai, Gazdasági, Védelmi Tanács, Nemzetpolitikai). Tagjai az érintett miniszterek; <span class="os-kulcs">ügydöntő csak ha tv./Korm.r. engedi</span>.</li><li><strong>14.</strong> A kormánybizottság — a Kormány segédszerve; <span class="os-kulcs">több igazgatási ágazatot érintő</span> ügyekre, az ágazatok közötti együttműködés koordinálására. Rendelettel vagy normatív határozattal jön létre; tagjai az érintett miniszterek; <span class="os-kulcs">ügydöntő jogkör csak tv./Korm.r. felhatalmazásával</span>.</li><li><strong>15.</strong> Az interminiszteriális (tárcaközi) bizottság — egyéb javaslattevő-véleményező-tanácsadó <span class="os-kulcs">testület</span>, a Kormány hozza létre normatív határozattal (pl. Fejlesztéspolitikai Koordinációs Bizottság). Funkció: koordináció, konzultáció, kormányzaton kívüli szereplők bevonása. Tagjai érdekképviseleti-szakmai-tudományos képviselők; <span class="os-kulcs">ügydöntő jogköre nincs</span>.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>18.</strong> A Kormány segédszervei — a Kormány ülésen kívüli szervezeti formái (többségükben testületek): <span class="os-kulcs">kabinet, kormánybizottság, KÁT</span>, egyéb javaslattevő-véleményező testületek, valamint a <span class="os-kulcs">kormánybiztos, miniszterelnöki biztos, miniszterelnöki megbízott</span> és a miniszterelnök politikai igazgatója.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/14.</div><div class="os-tetel-cim">A minisztérium vezetési struktúrája</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Politikai vezetők</div><ul class="os-lista"><li><span class="os-kulcs">Miniszter</span> — a minisztérium vezetője, a Kormány tagja</li><li><span class="os-kulcs">Államtitkár</span> — a minisztert helyettesíti, ügydöntő jogkörrel; politikai vezető</li></ul></div><div class="os-szek"><div class="os-szek-cim">Szakmai vezetők</div><ul class="os-lista"><li><span class="os-kulcs">Közigazgatási államtitkár</span> — a hivatali szervezet vezetője; gondoskodik a minisztérium működéséről</li><li><span class="os-kulcs">Helyettes államtitkár</span> — a közigazgatási államtitkár irányítása alatt, szakmai szervezeti egységet vezet</li></ul></div><div class="os-szek"><div class="os-szek-cim">Belső szervezeti felépítés</div><ul class="os-lista"><li><span class="os-kulcs">Főosztály</span> → <span class="os-kulcs">osztály</span> — a szervezeti egységek alaptípusai</li><li>Az SZMSZ rögzíti a belső struktúrát és a feladatköröket</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>16.</strong> Az államtitkár jogállása — a minisztert vezetésében közvetlenül segíti; <span class="os-kulcs">a miniszter teljes jogkörű helyettese</span>, politikai felsővezető. A <span class="os-kulcs">köztársasági elnök nevezi ki</span> (a miniszterelnök javaslatára, a miniszter véleményével), esküt tesz. Megbízatása a miniszterelnök megbízatásának megszűnésével is megszűnik.</li><li><strong>17.</strong> A közigazgatási államtitkár jogállása — a minisztérium <span class="os-kulcs">hivatali szervezetét vezeti</span> (a miniszter irányítása alatt); minisztériumonként <span class="os-kulcs">csak egy</span>. <span class="os-kulcs">Kormányzati szolgálati jogviszonyban</span> álló szakmai felsővezető; a köztárs. elnök nevezi ki <span class="os-tul">határozatlan időre</span>, felsőfokú végzettséggel.</li><li><strong>18.</strong> A helyettes államtitkár jogállása — a minisztériumon belüli munkamegosztás szerint a <span class="os-kulcs">szakmai munkát irányítja</span>; egy minisztériumban <span class="os-kulcs">több is van</span>. A miniszterelnök nevezi ki. Minden minisztériumban működik egy az EU-források irányító hatósági feladataira, aki e körben nem utasítható.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/15.</div><div class="os-tetel-cim">A Miniszterelnökség</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Jogállás</div><ul class="os-lista"><li><span class="os-kulcs">A miniszterelnök munkaszervezete</span> (a kormányzati igazgatás központi szerve)</li><li>Élén a <span class="os-kulcs">Miniszterelnökséget vezető miniszter</span> áll</li></ul></div><div class="os-szek"><div class="os-szek-cim">Funkciók</div><ul class="os-lista"><li>A miniszterelnök tevékenységének <span class="os-kulcs">szakmai és adminisztratív támogatása</span></li><li><span class="os-kulcs">Kormányzati koordináció</span>, a Kormány döntéseinek előkészítése-nyomon követése</li><li>Stratégiai feladatok, közigazgatás-szervezés</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>9.</strong> A Miniszterelnöki Kabinetiroda — a Kormányzati Központ minisztériuma, a <span class="os-kulcs">miniszterelnök munkaszervezete</span>; a miniszterelnök <span class="os-kulcs">kabinetfőnöke</span> vezeti miniszterként (kormányzati általános politikai koordináció + szakpolitikai feladatok). Szervezetileg ide tartozik a Miniszterelnöki Kormányiroda is.</li><li><strong>16.</strong> A Miniszterelnökség jogállása és funkciói — a Kormány munkáját segítő központi államigazgatási szerv, <span class="os-kulcs">minisztériumi jogállással</span>; hivatali szervezetét a közigazgatási államtitkár vezeti. Fő funkció: <span class="os-kulcs">összehangolás, koordináció</span> és szakpolitikai feladatok.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/16.</div><div class="os-tetel-cim">Önkormányzati államigazgatási feladatok</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A keret</div><ul class="os-lista"><li>A helyi önkormányzatok <span class="os-kulcs">delegált (átruházott) államigazgatási feladatokat</span> is ellátnak</li><li>E körben a képviselő-testület <span class="os-tul">utasítást nem adhat</span>, a döntést <span class="os-tul">nem bírálhatja felül</span></li><li>Államigazgatási feladatot <span class="os-kulcs">csak törvény</span> állapíthat meg, <span class="os-kulcs">arányos költségvetési támogatással</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">A feladatellátás szervei</div><ul class="os-lista"><li><span class="os-kulcs">Jegyző</span> — az államigazgatási hatósági feladatok zömét ellátja</li><li><span class="os-kulcs">Polgármester, képviselő-testület, bizottság</span> — törvényi felhatalmazás szerint</li><li>Pl. <span class="os-kulcs">anyakönyvi ügyek</span>, honvédelmi/polgári védelmi/katasztrófa-elhárítási feladatok</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>7.</strong> A helyi önkormányzatok törvényességi felügyelete — a <span class="os-kulcs">Kormány</span> biztosítja (a közigazgatási és területfejlesztési miniszter irányításával, a <span class="os-kulcs">kormányhivatalok útján</span>). Eleme az önkormányzati rendeletek jogrendbe illeszkedése: Alaptörvénybe ütközés → a Kormány az <span class="os-kulcs">AB</span>-hez fordul; más jogszabályba ütközés → a kormányhivatal a <span class="os-kulcs">Kúria Önkormányzati Tanácsához</span>. Eszköz: törvényességi felhívás, az Alaptörvénnyel ellentétes testület feloszlatása (Ogy, AB véleményével).</li><li><strong>22.</strong> Az önkormányzati államigazgatási feladatellátás indoka — a <span class="os-kulcs">delegált feladatok</span>: (1) a közigazgatási feladatok mennyisége megnőtt, az állam saját szervei útján nem tudja ellátni; (2) <span class="os-kulcs">gazdaságossági-hatékonysági</span> ok — minden településen működő helyhatóságot célszerű megbízni. Államigazgatási feladatot csak <span class="os-kulcs">törvény/Korm.r.</span> írhat elő, a képviselő-testület beleszólása nélkül, központi költségvetési támogatással.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/17.</div><div class="os-tetel-cim">A kormányhivatal</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Vezetés</div><ul class="os-lista"><li><span class="os-kulcs">Főispán</span> — a fővárosi és vármegyei kormányhivatal <span class="os-tul">politikai vezetője</span></li><li><span class="os-kulcs">Főigazgató</span> — a hivatal szakmai vezetője</li><li><span class="os-kulcs">Igazgató</span> — a főigazgató munkáját segíti</li></ul></div><div class="os-szek"><div class="os-szek-cim">Szervezet</div><ul class="os-lista"><li>A hivatal <span class="os-kulcs">főosztályokra, osztályokra</span> tagolódik</li><li><span class="os-tul">Járási hivatalok</span> a kormányhivatal szervezeti egységei</li></ul></div><div class="os-szek"><div class="os-szek-cim">Feladatok</div><ul class="os-lista"><li><span class="os-kulcs">Hatósági feladatok</span> (építésügy, gyámügy, népegészségügy stb.)</li><li><span class="os-kulcs">Önkormányzatok törvényességi felügyelete</span></li><li>A területi államigazgatási szervek koordinációja</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>23.</strong> A kormányhivatal főbb feladat- és hatáskörei — a Kormány <span class="os-kulcs">általános hatáskörű területi államigazgatási szerve</span>, a főispán vezeti. Fő feladatok: <span class="os-kulcs">koordinációs</span> (a területi szervek összehangolása, államigazgatási kollégium), <span class="os-kulcs">ellenőrzési</span>, <span class="os-kulcs">általános jogorvoslati fórum</span> (elsőfokú önkorm. hatósági döntések), és a helyi önkormányzatok (+ nemzetiségi önkormányzatok) <span class="os-kulcs">törvényességi felügyelete</span>.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>12.</strong> A KTM kormányhivatal feletti irányítási jogköre — a fővárosi/vármegyei kormányhivatal a <span class="os-kulcs">közigazgatási és területfejlesztési miniszter</span> irányítása alatt áll, de <span class="os-kulcs">nem teljes körűen</span>: a miniszter nem alapíthatja/szüntetheti meg, és nem nevezi ki a vezetőjét. A szakmai irányításban másik miniszter (szakmai irányító miniszter) is közreműködhet.</li><li><strong>13.</strong> A szakmai irányító miniszterek jogosítványai — kormányrendeletben meghatározva: a döntés megsemmisítése (új eljárásra utasítás), előzetes/utólagos jóváhagyás, <span class="os-kulcs">egyedi utasítás</span>, jelentéstételre kötelezés, törvényességi-szakszerűségi ellenőrzés. A főispánnak (és rajta keresztül a járási hivatalvezetőnek) egyedi utasítást adhatnak.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/18.</div><div class="os-tetel-cim">A járási hivatal</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Jogállás</div><ul class="os-lista"><li>A <span class="os-kulcs">fővárosi/vármegyei kormányhivatal szervezeti egysége</span> (kirendeltsége)</li><li>A <span class="os-kulcs">legalsó szintű</span>, általános hatáskörű területi államigazgatási szerv</li></ul></div><div class="os-szek"><div class="os-szek-cim">Vezetés</div><ul class="os-lista"><li><span class="os-kulcs">Hivatalvezető</span> — a járási hivatal élén</li><li>A kormányhivatal főispánjának/főigazgatójának alárendelten</li></ul></div><div class="os-szek"><div class="os-szek-cim">Feladatkör</div><ul class="os-lista"><li>Az ügyfélközeli <span class="os-kulcs">hatósági ügyek</span> intézése (okmányügyek, szociális ügyek stb.)</li><li><span class="os-kulcs">Kormányablakok</span> működtetése — integrált ügyfélszolgálat</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/19.</div><div class="os-tetel-cim">A közigazgatás alapfunkciói</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Állandó és változó funkciók</div><ul class="os-lista"><li><span class="os-kulcs">Állandó funkciók</span> — a közigazgatás létéből fakadnak, időtől függetlenek</li><li><span class="os-kulcs">Változó funkciók</span> — a társadalmi-gazdasági viszonyok, politikai döntések szerint változnak</li></ul></div><div class="os-szek"><div class="os-szek-cim">Az államigazgatási feladatok köre</div><ul class="os-lista"><li>A feladatok meghatározása <span class="os-kulcs">módszertani kérdés</span> — történtek törekvések a felmérésükre</li><li><span class="os-kulcs">POSDCORB</span> (Gulick) — Planning, Organizing, Staffing, Directing, Coordinating, Reporting, Budgeting</li><li><span class="os-kulcs">Hatékony igazgatás modellje</span> és annak kritikája</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>26.</strong> Az államigazgatási feladatok felmérése — a feladatok számbavétele <span class="os-kulcs">feladatkataszterekkel</span>. Kísérletek: Magyary Zoltán „A magyar közigazgatás tükre" (<span class="os-ev">1932</span>, 9850 feladat), Államreform Bizottság (<span class="os-ev">2007</span>, 4000 feladat), Magyary Program (<span class="os-ev">2012</span>) <span class="os-kulcs">Állami feladatkataszter</span> (8000 jogszabály, 30 000 feladat).</li><li><strong>27.</strong> A POSDCORB — Fayol nyomán (tervezés, szervezés, parancsolás, egybehangolás, ellenőrzés) → Gulick és Urwick: <span class="os-kulcs">P</span>lanning, <span class="os-kulcs">O</span>rganizing, <span class="os-kulcs">S</span>taffing, <span class="os-kulcs">D</span>irecting, <span class="os-kulcs">Co</span>ordinating, <span class="os-kulcs">R</span>eporting, <span class="os-kulcs">B</span>udgeting. Az igazgatás <span class="os-kulcs">funkcióit</span> foglalja össze; a közigazgatást a célja (közérdekűség) különbözteti meg.</li><li><strong>28.</strong> A hatékony igazgatás modellje és kritikája — a Weber-féle <span class="os-kulcs">bürokratikus szervezeten</span> alapul: szigorú hierarchia (a felettes utasít), a vezető akarata érvényesül, <span class="os-kulcs">szűrt, egyirányú információáramlás</span>, zárt-átláthatatlan működés. <span class="os-kulcs">Kritika</span>: ezek a jegyek egy demokratikus jogállam közigazgatásának külső kapcsolataiban elfogadhatatlanok.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>21.</strong> A közigazgatás funkciói a szociológia szerint — <span class="os-kulcs">integráció</span> (a társadalmi érdekek becsatornázása-kiegyenlítése, a társadalmi alrendszerek egyensúlya) és <span class="os-kulcs">allokáció</span> (a társadalmi erőforrások egyenletesebb elosztása).</li><li><strong>22.</strong> A végrehajtás mint funkció — jogtudomány: <span class="os-kulcs">jogszabályok végrehajtása</span>; politikatudomány (Wilson): a politikusok döntéseinek végrehajtása. Három tevékenység útján: <span class="os-kulcs">jogalkotás, jogalkalmazás, szervezés</span>.</li><li><strong>23.</strong> Az államigazgatási feladatok körének meghatározása — <span class="os-kulcs">feladatkataszterek</span> felállítása; a 2012-es Állami feladatkataszter a közfeladatokat ágazatcsoport–ágazat–...–intézkedés bontásban tartalmazza, a felelős szervvel, költségvetéssel; segíti a deregulációt.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/20.</div><div class="os-tetel-cim">Államigazgatási tevékenységfajták</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Fő tevékenységfajták</div><ul class="os-lista"><li><span class="os-kulcs">Jogalkotó tevékenység</span> — szűk (rendeletalkotás) és tág értelemben</li><li><span class="os-kulcs">Hatósági jogalkalmazás</span> — egyedi ügyekben döntés (engedély, kötelezés)</li><li><span class="os-kulcs">Hatósági felügyelet</span> — a jogkövető magatartás ellenőrzése</li><li><span class="os-kulcs">Szervező-szolgáltató tevékenység</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Fontos elhatárolások</div><ul class="os-lista"><li><span class="os-kulcs">Hatáskör vs. feladatkör</span> — a hatáskör konkrét döntési jogosultság</li><li><span class="os-kulcs">Kiadmányozás</span> — a döntés aláírásának joga (nem azonos a hatáskörrel)</li><li><span class="os-kulcs">Hatáskör-átruházás és szubdelegálás tilalma</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>29.</strong> Az államigazgatási hatósági jogalkalmazás — az államigazgatási jogalkalmazáson belül: az erre feljogosított szerv <span class="os-kulcs">hatóság</span>, amely a normát a <span class="os-kulcs">hierarchián kívül álló jogalanyokkal szemben</span>, közhatalom birtokában, <span class="os-kulcs">egyoldalú döntéssel</span> érvényesíti. Hatósági jogkört csak jogszabály adhat (Ákr., 2018-tól).</li><li><strong>31.</strong> A kiadmányozás vs. a hatáskör — a <span class="os-kulcs">hatáskört</span> csak jogszabály telepítheti, átruházása csak engedéllyel (szubdelegálás tilos). A <span class="os-kulcs">kiadmányozási jog</span> a döntés/intézkedés kiadásának joga, a szerven belül átruházható; a kiadmányozó a hatáskörrel rendelkező nevében jár el, ami <span class="os-kulcs">nem érinti a vezető hatáskörét és felelősségét</span>.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>29.</strong> Az államigazgatási jogalkalmazás — a jog érvényesítését célzó tevékenység: egyedi jogalkalmazói aktusban <span class="os-kulcs">jogot/kötelezettséget állapít meg, módosít, szüntet meg</span>, tényt-adatot igazol, vagy jogvitát dönt el. Funkciója a végrehajtás.</li><li><strong>30.</strong> A hatáskör-átruházás és a szubdelegálás tilalma — <span class="os-kulcs">hatáskör-átruházás tilalma</span>: a szerv nem bízhat meg mást a hatáskörébe tartozó feladattal (kivéve, ha jogszabály engedi). <span class="os-kulcs">Szubdelegálás tilalma</span>: az átruházott hatáskör tovább nem ruházható.</li><li><strong>31.</strong> A hatáskör és a feladatkör — <span class="os-kulcs">Feladatkör</span>: a szerv által ellátandó feladatok összessége (csak jogszabály hozhat létre). <span class="os-kulcs">Hatáskör</span>: a feladat ellátásához alkalmazható jogi eszközök (engedélyezés, tiltás, szankcionálás) összessége — csak jogszabály állapíthatja meg.</li><li><strong>32.</strong> Az államigazgatás jogalkotó tevékenysége — <span class="os-kulcs">Szűk értelemben</span>: a jogalkotásra jogosult szervek jogszabályt/közjogi szervezetszabályozó eszközt bocsátanak ki. <span class="os-kulcs">Tág értelemben</span>: a jogalkotási folyamat minden szakasza (előkészítés, dereguláció).</li><li><strong>33.</strong> Az államigazgatási tevékenységfajta — azt mutatja meg, milyen <span class="os-kulcs">módon, eszközökkel és igazgatási tevékenység révén</span> látják el az államigazgatási feladatokat; olyan <span class="os-kulcs">feladatcsoportok</span>, amelyeket lényeges tulajdonságuk összefűz.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/21.</div><div class="os-tetel-cim">A hatósági felügyelet típusai</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A hatósági felügyelet</div><ul class="os-lista"><li>A <span class="os-kulcs">közigazgatási hierarchián kívül álló</span> jogalanyokra értendő</li><li>Jogszabályban meghatározott <span class="os-kulcs">tevékenység ellenőrzésére</span> irányul, az <span class="os-tul">önkéntes jogkövetésből</span> kiindulva</li></ul></div><div class="os-szek"><div class="os-szek-cim">A típusok</div><ol class="os-szam"><li><span class="os-kulcs">Speciális hatósági felügyelet (ex lege)</span> — felügyeleti szervek (fogyasztóvédelem, közegészségügy, munkavédelem)</li><li><span class="os-kulcs">Általános hatósági felügyelet</span> — a jogalkalmazó szerv ellenőrzi a saját aktusa követését (pl. építési engedély → ellenőrzés)</li><li><span class="os-kulcs">Törvényességi felügyelet</span> — köztestületek, állami vállalatok felett; <span class="os-tul">NEM hatósági felügyelet</span> (Ksztv., Mötv.)</li></ol></div><div class="os-megj">💡 Közös: mindkét felügyelet keretében tett intézkedés/döntés ellen <span class="os-kulcs">bírói úton</span> van jogorvoslat. A törvényességi felügyelet alanya soha nem lehet magánszemély.</div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>30.</strong> A hatósági felügyelet — a hatósági tevékenység egyik formája (NEM a szervezetrendszeri felügyelet). Az <span class="os-kulcs">önkéntes jogkövetés</span> esetén a hatóság feladata a <span class="os-kulcs">jogkövető magatartás ellenőrzése</span> és intézkedés, ha az eltér az előírttól. Az <span class="os-kulcs">ex lege</span> szabályozási módhoz kötődik (a norma közvetlenül hat a jogalanyokra).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/22.</div><div class="os-tetel-cim">A nemzeti vagyon</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Fogalom</div><ul class="os-lista"><li>Az <span class="os-kulcs">állam és a helyi önkormányzat tulajdona</span> (Alaptörvény 38-39. cikk; <span class="os-tul">2011. évi CXCVI. tv., Nvtv.</span>)</li><li>Ide tartozik többek között: kizárólagos tulajdonú dolgok, pénzügyi eszközök, vagyoni értékű jogok, légtér, kibocsátási egységek, <span class="os-kulcs">kulturális javak, régészeti lelet, nemzeti adatvagyon</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">A vagyonkategóriák</div><ol class="os-szam"><li><span class="os-kulcs">Forgalomképtelen nemzeti vagyon</span> — nem idegeníthető el (pl. folyók, törzshálózati vasúti pályák)</li><li><span class="os-kulcs">Nemzetgazdasági szempontból kiemelt jelentőségű</span> — pl. műemlékek (Citadella, Operaház), állami társaságok (MVM, MÁV, Magyar Posta)</li><li><span class="os-kulcs">Korlátozottan forgalomképes</span> — törvényi/önkormányzati feltételekkel rendelkezhető</li><li><span class="os-kulcs">Üzleti vagyon</span> — engedély nélkül elidegeníthető, csak átlátható szervezettel köthető szerződés</li></ol></div><div class="os-szek"><div class="os-szek-cim">Az állami vagyon rendeltetése szerint</div><div class="os-grid"><div><div class="alcim">Kincstári vagyon</div>Kizárólagos tulajdon + korlátozottan forgalomképes + nemzetgazdaságilag kiemelt</div><div><div class="alcim">Üzleti vagyon</div>A nem kincstári (önkormányzatnál: nem törzsvagyon) rész</div></div></div></div></article><div class="os-tanacs"><div class="os-tanacs-cim">Szombati ismétlési tanács</div><div class="os-tanacs-szov">A 2. hét anyaga: a Kormány segédszervei, a központi és területi szervek, a közigazgatási funkciók. Jövő héten zárjuk a személyzettel és a reformokkal.</div></div>';
+OSSZEF.h3='<div class="os-bevez"><div class="os-bevez-katlb">Szombati Ismétlés · 3. Hét</div><div class="os-bevez-cim">Államigazgatás — befejezés + áttekintés</div><div class="os-bevez-alcim">Személyzet, felelősség, reform · Á/23—Á/31.</div></div><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/23.</div><div class="os-tetel-cim">A szervezeti és működési szabályzat (SZMSZ)</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Jogi szabályozás</div><ul class="os-lista"><li>A szervezet és működés rendjében nagy szerepet kapnak a <span class="os-kulcs">belső szabályzatok</span></li><li>Megalkotásukra <span class="os-kulcs">jogszabály ad felhatalmazást</span></li><li>Jellemzően <span class="os-kulcs">közjogi szervezetszabályozó eszköz</span> formájában (normatív utasítás)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Főbb elemek</div><ul class="os-lista"><li>A szerv <span class="os-kulcs">jogállása, feladat- és hatásköre</span></li><li>A <span class="os-kulcs">szervezeti felépítés</span> (egységek, vezetők)</li><li>A <span class="os-kulcs">működés rendje</span>, a kiadmányozás, helyettesítés szabályai</li><li>Az SZMSZ-t az <span class="os-kulcs">irányító/felügyeleti szerv hagyja jóvá</span></li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/24.</div><div class="os-tetel-cim">Zárt rendszerű személyzeti politika</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A személyzeti politika fogalma</div><ul class="os-lista"><li>A közigazgatási alkalmazottak kiválasztására, képzésére, bérezésére, előmenetelére, jogaira-kötelezettségeire vonatkozó <span class="os-kulcs">egységes, hosszú távú célkitűzések</span></li><li>Funkciója: összeegyeztetni az <span class="os-tul">állam, alkalmazottak, lakosság</span> érdekeit</li></ul></div><div class="os-szek"><div class="os-szek-cim">A zárt rendszer jellemzői</div><ul class="os-lista"><li><span class="os-kulcs">Központilag kialakított és irányított</span>; egységes törvény/jogszabályrendszer szabályozza (<span class="os-tul">közszolgálati pragmatika</span>)</li><li>A munka <span class="os-kulcs">élethivatás</span> — élethossziglan, nyugdíjazásig</li><li>Két alappillér: <span class="os-kulcs">kiválasztás</span> és <span class="os-kulcs">karrier (karrierrendszer)</span></li><li><span class="os-kulcs">Elmozdíthatatlanság elve</span> — fokozott védelem az elbocsátással szemben</li></ul></div><div class="os-szek"><div class="os-szek-cim">Előmenetel és díjazás</div><ul class="os-lista"><li>A szakmai előmenetel alapja: <span class="os-kulcs">szolgálati idő</span> + <span class="os-kulcs">iskolai végzettség</span></li><li>Rangfokozatok és kapcsolódó díjazás; az egyéni teljesítmény szerepe <span class="os-tul">mérsékelt</span></li><li>A díjazásnak <span class="os-kulcs">kötött rendje</span> van (besorolási osztály, fokozat, szolgálati hely)</li><li>Gyakran <span class="os-kulcs">tiltják/korlátozzák a másodállást</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>8.</strong> A kormánytisztviselői hivatásetikai alapelvek (5+) — az <span class="os-kulcs">elkötelezettség</span>, a <span class="os-kulcs">nemzeti érdekek előnyben részesítése</span>, az igazságosság, a méltányosság, a méltóság, a tisztesség, az <span class="os-kulcs">előítéletektől való mentesség</span> és a felelősségtudat (Kit. + Kormánytisztviselői Hivatásetikai Kódex).</li><li><strong>34.</strong> A közigazgatási személyzeti politika fogalma — az alkalmazottak kiválasztására, képzésére, bérezésére, előmenetelére, jogaira-kötelezettségeire vonatkozó, <span class="os-kulcs">hosszú távú, deklarált egységes célkitűzések</span>. Funkciója: összeegyeztetni az <span class="os-kulcs">állam, az alkalmazottak és a lakosság</span> érdekeit.</li><li><strong>35.</strong> A közigazgatási pálya biztonsága — a dolgozó <span class="os-kulcs">elmozdíthatatlansága</span>, az elbocsátással szembeni fokozott védelem; a zárt rendszer két pillére (kiválasztás + karrier) közül a <span class="os-kulcs">kiválasztás</span> biztosítja. Az alkalmazás élethossziglani szolgálat/hivatás.</li><li><strong>36.</strong> Asszimilációs és differenciált rendszer — <span class="os-kulcs">Asszimilációs</span>: a köz- és versenyszféra azonos jogi rezsim (munkajog) alá esik. <span class="os-kulcs">Differenciált</span>: a közhatalmat gyakorló dolgozót többletjogosítványokkal kell felruházni (a kikényszeríthető döntések miatt), amit többletkötelezettségek ellentételeznek.</li><li><strong>44.</strong> A kormányzati szolgálati jogviszony fogalma — a Kormány irányítása alá tartozó szerveknél a szakmai állomány <span class="os-kulcs">kormánytisztviselőként</span> a <span class="os-kulcs">Kit. (2018. évi CXXV. tv.)</span> hatálya alatt; az előmeneteli rendszer megszűnt, helyét az <span class="os-kulcs">álláshely-alapú foglalkoztatás</span> vette át. (Felsővezető / vezető / kormánytisztviselő szintek.)</li><li><strong>45.</strong> A kormányzati szolgálati jogviszony a munkajoghoz képest — <span class="os-kulcs">különleges jogviszony</span>: a feleket többletkötelezettségek terhelik és többletjogosultságok illetik. <span class="os-kulcs">Hasonlóság</span>: mindkettő munkavégzésre irányul. <span class="os-kulcs">Különbség</span>: a közszolgálat ismeri a fegyelmi felelősséget (hierarchikus viszony), a munkajog nem (egyenrangú felek).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/25.</div><div class="os-tetel-cim">Nyitott rendszerű személyzeti politika</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A nyitott (állásrendszerű) közszolgálat</div><ul class="os-lista"><li>A <span class="os-kulcs">magánigazgatáshoz hasonlít</span></li><li>Korlátozás nélküli <span class="os-kulcs">belépés</span> és <span class="os-kulcs">egyoldalú megszüntetés</span></li><li>Az alkalmazottakat <span class="os-kulcs">meghatározott feladatra szerződtetik</span>; a feladat megszűnésével könnyen elbocsáthatók</li></ul></div><div class="os-szek"><div class="os-szek-cim">Jellemzők</div><ul class="os-lista"><li><span class="os-kulcs">Politikai szempontú kiválasztás</span> lehetséges → USA: <span class="os-tul">„zsákmányrendszer"</span></li><li>Hátrány: nagy <span class="os-kulcs">fluktuáció</span> a választási eredmények függvényében</li><li>Az előmenetelt nem garantálja kiszámítható szabályozás, de az <span class="os-kulcs">egyéni képességek gyorsabb előrelépést</span> tesznek lehetővé</li><li>A díjazás az <span class="os-kulcs">egyéni teljesítménytől</span> függ, versenyképes</li></ul></div><div class="os-megj">💡 A gyakorlatban keveredhet: <span class="os-kulcs">politikai alapú kinevezésű vezetők</span> irányítják a <span class="os-kulcs">szakmai alapon kiválasztott</span> apparátust.</div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>37.</strong> A közigazgatási pálya nyitottsága — mindenki számára <span class="os-kulcs">egyenlő eséllyel elérhető</span> (származásra, osztályra, nemre, vagyonra hivatkozva senki nem zárható ki). Mo.-on 1848 előtt a jogegyenlőség hiánya miatt nem volt biztosított; a kiegyezés (1867) után. Jelentősége: a <span class="os-kulcs">demokratikus közigazgatás</span> alapfeltétele. (NEM keverendő a nyílt rendszerrel!)</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/26.</div><div class="os-tetel-cim">Személyzeti politika fejlődése 1867-től</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A főbb korszakok</div><ol class="os-szam"><li><span class="os-ev">1867-</span> a <span class="os-kulcs">pálya nyitottsága</span> és a zárt rendszerű személyzeti politika kiépítésének kezdete (kiegyezés)</li><li><span class="os-ev">1914</span> kiépül a <span class="os-kulcs">nemzetközileg is korszerű zárt rendszer</span></li><li><span class="os-ev">1945</span> fordulat: <span class="os-kulcs">zsákmányrendszer</span> sajátos formája, a képesítési előírások feloldása</li><li><span class="os-ev">1945-1949</span> többpártrendszer: pártszempontok, a <span class="os-tul">karrierrendszer megszűnése</span></li><li><span class="os-ev">1949-</span> <span class="os-kulcs">államigazgatási</span> személyzeti politika: párthűség, származási előny, a presztízs romlása, óriási fluktuáció</li><li><span class="os-ev">1957-1989</span> konszolidáció a szocialista rendszer keretei között</li><li><span class="os-ev">1992-</span> a <span class="os-kulcs">demokratikus, zárt rendszerű</span> közszolgálat újjáépítése</li></ol></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>8.</strong> A kormányzati rendszer és államigazgatás fejlődése (kiegyezés–1989) — <span class="os-ev">1867</span> parlamentáris monarchia → I. vh. után változó (1918 népköztársaság, 1919 Tanácsköztársaság) → <span class="os-ev">1920</span> Horthy, alkotmányos monarchia → <span class="os-ev">1946</span> köztársaság → <span class="os-ev">1949</span> Magyar Népköztársaság (Elnöki Tanács, tanácsrendszer, a Legfőbb ÁSZ és a Közig. Bíróság megszűnt) → <span class="os-ev">1989</span> parlamentáris köztársaság.</li><li><strong>43.</strong> A Magyary Programok „Személyzet" beavatkozási területe — MP 11.0 (2011) és MP 12.0 (2012); a Személyzet terület célja a <span class="os-kulcs">személyi állomány megújítása</span>, <span class="os-kulcs">életpályamodell</span> (a karrierrendszer előnyeivel + rugalmasság), az átjárhatóság (kormánytisztviselő-honvéd-rendészeti). Megvalósult: Kormányzati Személyzeti Stratégia, jogállási törvények, <span class="os-kulcs">Magyar Kormánytisztviselői Kar</span>, etikai kódexek.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>38.</strong> Személyzeti politika 1867–1945 — a <span class="os-kulcs">zárt rendszer</span> kiépítése a kiegyezéstől; az I. világháborúra (<span class="os-ev">1914</span>) létrejött a nemzetközileg is korszerű zárt rendszer, amit a két háború között finomítottak. <span class="os-ev">1945</span>: fordulat — a zsákmányrendszer sajátos formája, a képesítési előírások feloldása.</li><li><strong>39.</strong> Személyzeti politika 1945–1949 — többpártrendszer; a pártok <span class="os-kulcs">saját támogatóikkal töltötték fel</span> a tisztségeket (versengés) → a szakszerűség eltűnése és a <span class="os-kulcs">karrierrendszer megszűnése</span>. 1948: az önkormányzati állások államosítása. 1949: újabb fordulat.</li><li><strong>40.</strong> Személyzeti politika 1949–1957 — <span class="os-ev">1949</span> „a fordulat éve": a speciális jogállás megszűnt (Mt. kiterjesztése), az állomány politikai cseréje, a képesítési előírások eltörlése, <span class="os-kulcs">kétszeres létszámnövekedés</span>. 1950–56 a bizonytalanság kora; 1957: az érdemeken alapuló politikára való áttérés kezdete.</li><li><strong>41.</strong> Személyzeti politika 1957–1989 — a képesítési előírások lassú, következetlen visszavezetése; a vezetőknél a <span class="os-kulcs">politikai megbízhatóság</span> elsődlegessége. <span class="os-ev">1978</span> Államigazgatási Főiskola (felsőfokú szakemberképzés). Az egységes törvényi szabályozás tervezése megkezdődött, de a rendszerváltás előtt nem fogadták el.</li><li><strong>42.</strong> Személyzeti politika 1992 után — <span class="os-ev">1992</span> <span class="os-kulcs">Ktv. és Kjt.</span> (zárt rendszer); 2006-tól a nyitott rendszer elemei (NPM); <span class="os-ev">2010</span> Ksztv. (kormánytisztviselő); <span class="os-ev">2011</span> Kttv. (közszolgálati tisztviselő); <span class="os-ev">2019</span> <span class="os-kulcs">Kit.</span> (álláshely-alapú, egységes szabályozás).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/27.</div><div class="os-tetel-cim">A fegyelmi felelősség</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A fegyelmi felelősség</div><ul class="os-lista"><li>Az államigazgatási dolgozó <span class="os-kulcs">vétkes kötelezettségszegése</span> esetén</li><li>A <span class="os-kulcs">kormányzati szolgálati jogviszonyból</span> eredő kötelezettség megszegése</li><li>Eljárás: <span class="os-kulcs">fegyelmi eljárás</span> (vizsgálat, fegyelmi tanács)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Kiszabható büntetések</div><ul class="os-lista"><li><span class="os-kulcs">Megrovás</span></li><li><span class="os-kulcs">Az előmenetelhez szükséges várakozási idő meghosszabbítása</span></li><li><span class="os-kulcs">Fizetési fokozatban visszavetés / illetménycsökkentés</span></li><li><span class="os-kulcs">Hivatalvesztés / a jogviszony megszüntetése</span> (legsúlyosabb)</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>33.</strong> A fegyelmi és a kártérítési felelősség különbsége — <span class="os-kulcs">Fegyelmi</span>: a jogviszonyból eredő kötelezettség vétkes megszegése; fegyelmi eljárás; büntetés (megrovás → illetménycsökkentés → nem vezetői álláshelyre → hivatalvesztés). <span class="os-kulcs">Kárfelelősség</span>: egy tényállási elemmel bővebb — <span class="os-kulcs">kárt is okoz</span>, okozati összefüggéssel; gondatlan (max. 4 havi illetmény) vs. szándékos/súlyosan gondatlan (teljes kár).</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>43.</strong> Az államigazgatási dolgozók felelősségi alakzatai — fegyelmi felelősség, <span class="os-kulcs">vezetői eredményfelelősség</span>, anyagi (kár)felelősség, <span class="os-kulcs">etikai felelősség</span>, büntetőjogi felelősség.</li><li><strong>47.</strong> Az etikai vétség — az <span class="os-kulcs">etikai szabályok megszegése</span> (hivatásetikai alapelvek/részletszabályok — Kódex); <span class="os-kulcs">nem jogi felelősségi forma</span>. Jelentősége: a tételes jogot nem sértő, de közösségellenes, nemkívánatos cselekmények visszaszorítása.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/28.</div><div class="os-tetel-cim">A kárfelelősség</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A kárfelelősség feltételei</div><ul class="os-lista"><li>Az államigazgatási dolgozó a <span class="os-kulcs">jogviszonyából eredő kötelezettsége</span> vétkes megszegésével okozott kárért felel</li><li>Feltételek: <span class="os-kulcs">kötelezettségszegés</span>, <span class="os-kulcs">kár</span>, <span class="os-kulcs">okozati összefüggés</span>, <span class="os-kulcs">vétkesség</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Típusok és kimentés</div><ul class="os-lista"><li><span class="os-kulcs">Gondatlan</span> károkozás — korlátozott mértékű felelősség</li><li><span class="os-kulcs">Szándékos</span> károkozás — teljes kártérítés</li><li><span class="os-kulcs">Megőrzési felelősség</span> és <span class="os-kulcs">leltárhiányért való felelősség</span> (objektív elemekkel)</li><li>Kimentés: ha a kár <span class="os-tul">elháríthatatlan külső ok</span> (vis maior) miatt következett be</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>32.</strong> Az objektív felelősség — a felelősséget <span class="os-kulcs">a jogsértés önmagában megalapozza</span> (vétkességre tekintet nélkül); az egyetlen kimentési ok a <span class="os-kulcs">vis maior</span>. Pl. a megőrzési és a <span class="os-kulcs">leltárfelelősség</span>. A kárfelelősséget is fegyelmi eljárás keretében állapítják meg.</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>46.</strong> A vis maior — olyan <span class="os-kulcs">elháríthatatlan külső erőhatalom</span> közrehatása, amely a cselekménytől függetlenül bekövetkezett volna és a kárt ez okozta. Az <span class="os-kulcs">objektív felelősség egyetlen kimentési oka</span> (pl. leltárfelelősségnél).</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/29.</div><div class="os-tetel-cim">A vezetői eredményfelelősség</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Az eredményfelelősség</div><ul class="os-lista"><li>A vezető <span class="os-kulcs">a szervezeti egysége eredményességéért</span> felel — nem feltétlenül jogsértés alapján</li><li>Lényege: a <span class="os-kulcs">teljesítmény, az elért eredmény</span> alapján való elszámoltathatóság</li></ul></div><div class="os-szek"><div class="os-szek-cim">A jogi felelősségtől való különbözősége</div><div class="os-grid"><div><div class="alcim">Jogi felelősség</div><span class="os-kulcs">Jogsértéshez</span> kötött, utólagos, szankcióval jár (fegyelmi, kártérítési, büntetőjogi, etikai)</div><div><div class="alcim">Eredményfelelősség</div><span class="os-kulcs">Nem feltétlenül jogsértés</span>; a vezetői teljesítmény értékeléséhez kötődik, a megbízatás megújítása/visszavonása lehet a következménye</div></div></div><div class="os-megj">💡 Az államigazgatási dolgozó jogi felelősségi alakzatai: <span class="os-kulcs">fegyelmi, kártérítési, büntetőjogi, etikai (hivatásetikai)</span> felelősség.</div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>34.</strong> Az államigazgatási dolgozók büntetőjogi felelőssége — a Btk.-ba ütköző magatartás (bűncselekmény) alapozza meg; a Btk. a <span class="os-kulcs">hivatalos személy</span> / közfeladatot ellátó személy fogalmát használja. A <span class="os-kulcs">hivatali bűncselekményeket</span> csak ők követhetik el (pl. hivatali visszaélés); más bűncselekménynél <span class="os-kulcs">súlyosabb elbírálás</span> alá esnek (pl. közokirat-hamisítás).</li><li><strong>35.</strong> Az általában vett jogi felelősség — szankció kilátásba helyezése, ha valaki <span class="os-kulcs">felróható módon jogellenes</span> magatartást tanúsít. Két tényező: a <span class="os-kulcs">jogsértés</span> (objektív feltétel) és — szükség esetén — a <span class="os-kulcs">felróhatóság/vétkesség</span> (szubjektív feltétel).</li><li><strong>36.</strong> A közszolgálati etikai felelősség — etikai szabályok megszegése → <span class="os-kulcs">etikai vétség</span> → etikai felelősség. Jelentősége: a <span class="os-kulcs">tételes jogot nem sértő</span>, de közösségellenes anomáliák visszaszorítása. Alapelvek: elkötelezettség, nemzeti érdek, igazságosság, méltányosság stb. (a Kar etikai eljárást folytat).</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>48.</strong> A hivatásetikai normák funkciója — a <span class="os-kulcs">jogi normák kiegészítése, pontosítása</span>: a bizonytalan tartalmú/határozatlan jogi fogalmakat (méltányosság, igazságosság, szokásos mértékű ajándék) az etikai normák töltik ki tartalommal.</li><li><strong>54.</strong> A Magyar Kormánytisztviselői Kar — a kormánytisztviselők, állami tisztviselők <span class="os-kulcs">önkormányzattal rendelkező szakmai köztestülete</span>, <span class="os-kulcs">kötelező tagsággal</span> (a kinevezéssel). Feladata: a tagok érdekvédelme, a <span class="os-kulcs">hivatásetikai részletszabályok</span> megalkotása, az etikai eljárás rendszerének kialakítása és lefolytatása.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/30.</div><div class="os-tetel-cim">Az új közmenedzsment (NPM)</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Előzmény és okok</div><ul class="os-lista"><li>A II. világháború utáni klasszikus közigazgatás → <span class="os-kulcs">jóléti állam</span> → a közigazgatás túlterjeszkedése</li><li>Az NPM (<span class="os-tul">New Public Management</span>) a 80-as évek végétől az ezredfordulóig</li><li>Okok: elégedetlenség a jóléti állammal, a <span class="os-kulcs">magánszféra hatékonyabb</span> szemlélet, recesszió, megszorítások</li></ul></div><div class="os-szek"><div class="os-szek-cim">Cél és eszközök</div><ul class="os-lista"><li>Cél: <span class="os-kulcs">hatékonyság, eredményesség, költségtakarékosság</span>; „olcsó, kicsi állam"</li><li>Eszközök: <span class="os-kulcs">kiszervezés, privatizáció, decentralizáció</span>, piaci mechanizmusok (versenyeztetés, közbeszerzés)</li><li><span class="os-kulcs">Ügynökségek</span> megjelenése; minisztériumok = közpolitika-alkotás, ügynökségek = végrehajtás</li><li>Megjelent az <span class="os-kulcs">egyéni teljesítményértékelés</span>; lazult a pályabiztonság</li></ul></div><div class="os-szek"><div class="os-szek-cim">Kritikák</div><ul class="os-lista"><li>Az állami szféra <span class="os-tul">nem működtethető tisztán piaci mintára</span></li><li>A reformok nem hozták a várt eredményeket; a közérdek a veszteséges feladatok ellátását is megköveteli</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>37.</strong> A globális közigazgatási reformirányzatok — főbb irányzatok: Public Choice, New Public Administration, <span class="os-kulcs">NPM</span>, <span class="os-kulcs">Good Governance</span>, <span class="os-kulcs">neo-weberi állam</span>. Az NPM (1980-as évek vége–ezredforduló) a piaci viszonyok idealizálásán alapul: „kicsi és olcsó állam", a magánigazgatás módszerei, kiszervezés, privatizáció, teljesítményközpontúság.</li><li><strong>38.</strong> A Good Governance (jó kormányzás) — az utolsó évtized óta; <span class="os-kulcs">hálózatokban gondolkodó</span> kormányzás — az állam, a magánszektor és a <span class="os-kulcs">civil társadalom együttműködése</span>. Szempontjai: részvétel, jogérvényesülés, <span class="os-kulcs">átláthatóság, felelősség</span>, egyetértés, hatékonyság, elszámoltathatóság; széles társadalmi konszenzus.</li><li><strong>39.</strong> A neo-weberi állam és közigazgatás — az NPM kudarcára (2008-as válság) adott válasz; <span class="os-kulcs">megtartja a weberi „régi" közigazgatás</span> életképes elemeit (az állam szerepe, korszerűsített közigazgatási jog), és <span class="os-kulcs">új elemekkel</span> egészíti ki (minőség, szolgáltatási kultúra, professzionalizáció, konzultáció). A klasszikus weberi és az NPM keveréke.</li><li><strong>42.</strong> 10 célkitűzés az ezredforduló utáni közigazgatás-fejlesztésben — pl. <span class="os-kulcs">állampolgárbarát/ügyfélközpontú</span> közigazgatás, a közszolgáltatások színvonalának emelése, a kiadások csökkentése, a <span class="os-kulcs">hatékonyság-eredményesség</span> növelése, a teljesítmény jelentőségének növelése, egyszerűsítés, racionalizálás, <span class="os-kulcs">participáció</span>, elszámoltathatóság-átláthatóság, <span class="os-kulcs">e-közigazgatás</span>.</li><li><strong>44.</strong> A 2010 óta meghirdetett közigazgatás-fejlesztési programok — a <span class="os-kulcs">Magyary Zoltán Közigazgatás-fejlesztési Programok</span> (MP 11.0–2011, MP 12.0–2012). Stratégiai cél: a hatékony nemzeti közigazgatás és a közszolgáltatások színvonala. <span class="os-kulcs">Négy beavatkozási terület</span>: szervezet, feladat, eljárás, személyzet. (Folytatás: a 2014–2020 Közigazgatás- és Közszolgáltatás-fejlesztési Stratégia.)</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">Á/31.</div><div class="os-tetel-cim">Az Európai Közigazgatási Tér</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">A fogalom</div><ul class="os-lista"><li>A 90-es évek második felében: a <span class="os-kulcs">Közös Közigazgatási Tér(ség)</span> fogalma</li><li>A korábbi 15 nyugati EU-tagállam közös értékrendjén alapuló <span class="os-kulcs">ajánlások</span> a belépőknek</li><li>A tagállamok kötelesek az <span class="os-kulcs">uniós vívmányokat (acquis)</span> jog- és intézményrendszerükbe integrálni</li></ul></div><div class="os-szek"><div class="os-szek-cim">Általános követelmények a közigazgatással szemben</div><ul class="os-lista"><li><span class="os-kulcs">Jogbiztonság, felelősség, kiszámíthatóság</span></li><li><span class="os-kulcs">Nyitottság, átláthatóság, felelősségre vonhatóság</span></li><li><span class="os-kulcs">Hatékonyság, hatásosság</span></li></ul></div><div class="os-szek"><div class="os-szek-cim">Európai közigazgatási alapelvek</div><ul class="os-lista"><li><span class="os-kulcs">Megbízhatóság, eredményesség, hatékonyság, kiszámíthatóság</span></li><li><span class="os-kulcs">Stabilitás</span>, hozzáértő professzionális közigazgatás</li><li><span class="os-kulcs">Demokratizmus és pártatlanság, nyilvánosság és átláthatóság</span></li><li>Az <span class="os-kulcs">Európai Bíróság esetjoga</span> alapján: törvényes közigazgatás, arányosság, jogbiztonság, diszkrimináció tilalma, meghallgatás elve</li></ul></div><div class="os-szek"><div class="os-szek-cim">10 pontos kérdések</div><ul class="os-lista"><li><strong>24.</strong> A demokratikus jogállam elvárásai a közigazgatással szemben — két fő alapelv: <span class="os-kulcs">hatékonyság és demokratizmus</span>. A többségi elv a fékek-ellensúlyok mellett; az értékek pluralizmusa. Az OECD „jó kormányzás" vezérelvei: <span class="os-kulcs">átláthatóság-elszámoltathatóság, becsületesség-méltányosság, eredményesség-hatékonyság, jogállamiság</span>. A nyitott közigazgatás a demokrácia alkotóeleme.</li><li><strong>40.</strong> A közigazgatás-fejlesztésben részt vevő nemzetközi szervezetek — az <span class="os-kulcs">adminisztratív konvergencia</span> folyamatában. Típusok: <span class="os-kulcs">globális</span> (OECD, ENSZ, IMF, Világbank), <span class="os-kulcs">regionális</span> (Európa Tanács, EU, EUPAN), <span class="os-kulcs">intézmény</span> (IIAS, EIPA). Az <span class="os-kulcs">OECD</span> helyzetfelméréseket, összehasonlító jelentéseket készít.</li><li><strong>41.</strong> Az EU kötelezettségei a tagállami közigazgatás iránt — kötelező rendelkezés nincs, de a 90-es évek második felében megszületett a <span class="os-kulcs">Közös Közigazgatási Tér</span> fogalma; a tagállamok kötelesek az <span class="os-kulcs">acquis</span>-t integrálni. Európai közigazgatási alapelvek: megbízhatóság, eredményesség, kiszámíthatóság, <span class="os-kulcs">professzionalizmus, pártatlanság, átláthatóság</span>; az Európai Bíróság esetjoga (arányosság, jogbiztonság, meghallgatás).</li></ul></div><div class="os-szek"><div class="os-szek-cim">5 pontos kérdések</div><ul class="os-lista"><li><strong>49.</strong> Miért szükséges a közigazgatás fejlesztése — a gyorsan változó világban a jó állam <span class="os-kulcs">hatékony, takarékos, ügyfélbarát</span> szolgáltatásokat nyújt; az állandó <span class="os-kulcs">modernizáció</span> a gazdasági fejlődés és a feladatellátás feltétele („szolgáltató állam").</li><li><strong>50.</strong> Az adminisztratív konvergencia — a közszolgálatok <span class="os-kulcs">hasonló megoldásokat</span> alkalmaznak és hatnak egymásra; nagyobb <span class="os-kulcs">homogenitás és koherencia</span> jön létre. Az EU-n belül az <span class="os-kulcs">EUPAN</span> segíti; az önálló államok egymás mintáit követik, tapasztalataiból tanulnak.</li><li><strong>51.</strong> A nemzetközi szervezetek szerepe a közigazgatás-fejlesztésben — az adminisztratív konvergencia mozgatói; globális (ENSZ, IMF, Világbank), regionális (EU, Európa Tanács) és intézményi (IIAS, EIPA, <span class="os-kulcs">NISPAcee</span>, EUPAN) szereplők — ajánlások, tapasztalatcsere. Nem kizárólagos profiljuk, de küldetésük része.</li></ul></div></div></article><article class="os-tetel"><div class="os-tetel-fej"><div class="os-tetel-kod">▣</div><div class="os-tetel-cim">Mind a 31 tétel — kulcsfogalom-térkép</div></div><div class="os-tetel-body"><div class="os-szek"><div class="os-szek-cim">Alkotmányos alapok (Á/1—Á/4)</div><ul class="os-lista"><li><span class="os-kulcs">Á/1</span> Hatalommegosztás: Montesquieu 3 ág, 3 forma; átalakulás (partner, nem ellensúly)</li><li><span class="os-kulcs">Á/2</span> Ogy-Kormány: parlamentáris köztársaság, konstruktív bizalmatlanság, ellenőrzés (interpelláció/kérdés)</li><li><span class="os-kulcs">Á/3</span> K.eln.: ellenjegyzés nélküli vs. kötött jogkörök; Ogy feloszlatás (40 nap, márc. 31.)</li><li><span class="os-kulcs">Á/4</span> ÁSZ (12 év, pénzügyi, zárolhat) vs. ombudsman (6 év, ajánlás, bárki kezdeményezheti)</li></ul></div><div class="os-szek"><div class="os-szek-cim">Szervezetrendszer (Á/5—Á/8)</div><ul class="os-lista"><li><span class="os-kulcs">Á/5</span> 2 alrendszer: államigazgatás + önkormányzatok; 4 kapcsolódási pont</li><li><span class="os-kulcs">Á/6</span> Decentralizált (önálló, választott, köztisztviselő) vs. dekoncentrált (kirendeltség, kinevezett, kormánytisztviselő)</li><li><span class="os-kulcs">Á/7</span> Szervek: tipikus (Kormány, minisztérium, kp. hivatal, korm.főhivatal, területi) + atipikus (autonóm, önálló szabályozó); civil vs. rendészeti</li><li><span class="os-kulcs">Á/8</span> Irányítás (legteljesebb) > felügyelet > ellenőrzés; szakmai/szervezet/teljes irányítás; hatáskörelvonás tilalma</li></ul></div><div class="os-szek"><div class="os-szek-cim">Kormány és szervei (Á/9—Á/15)</div><ul class="os-lista"><li><span class="os-kulcs">Á/9</span> Kormány: ált. hatáskörű szerv, kettős funkció, miniszterelnök kiemelkedő szerepe</li><li><span class="os-kulcs">Á/10-11</span> Kormányülés (testületi, mineln. vezeti) + előkészítés (KÁT)</li><li><span class="os-kulcs">Á/12-13</span> Kormánybiztos (egyszemélyi, max. 4 év) vs. segédszervek (kabinet, kormánybizottság — testületi)</li><li><span class="os-kulcs">Á/14-15</span> Minisztérium (politikai: miniszter, államtitkár; szakmai: közig. áll.titkár, helyettes áll.titkár) + Miniszterelnökség</li></ul></div><div class="os-szek"><div class="os-szek-cim">Területi igazgatás és funkciók (Á/16—Á/22)</div><ul class="os-lista"><li><span class="os-kulcs">Á/16</span> Önkorm. államig. feladatok: delegált, jegyző, csak törvény + támogatás</li><li><span class="os-kulcs">Á/17-18</span> Kormányhivatal (főispán, főigazgató) + járási hivatal (kormányablakok)</li><li><span class="os-kulcs">Á/19-20</span> Közig. alapfunkciók (állandó/változó, POSDCORB) + tevékenységfajták (jogalkotás, jogalkalmazás, felügyelet)</li><li><span class="os-kulcs">Á/21</span> Hatósági felügyelet: speciális (ex lege) / általános / törvényességi (nem hatósági!)</li><li><span class="os-kulcs">Á/22</span> Nemzeti vagyon 4 kategória: forgalomképtelen / kiemelt / korlátozottan forgalomképes / üzleti</li></ul></div><div class="os-szek"><div class="os-szek-cim">Személyzet, felelősség, reform (Á/23—Á/31)</div><ul class="os-lista"><li><span class="os-kulcs">Á/23</span> SZMSZ: belső szabályzat, jogszabályi felhatalmazás, irányító hagyja jóvá</li><li><span class="os-kulcs">Á/24-25</span> Zárt rendszer (élethivatás, karrier, elmozdíthatatlanság) vs. nyitott (zsákmányrendszer, fluktuáció)</li><li><span class="os-kulcs">Á/26</span> Személyzeti politika 7 korszaka 1867-től</li><li><span class="os-kulcs">Á/27-29</span> Felelősség: fegyelmi, kártérítési, + vezetői eredményfelelősség (nem jogsértéshez kötött)</li><li><span class="os-kulcs">Á/30</span> NPM: 80-as évek vége, piaci minta, ügynökségek, kritikák</li><li><span class="os-kulcs">Á/31</span> Európai Közigazgatási Tér: acquis integrálása, közigazgatási alapelvek</li></ul></div></div></article><div class="os-tanacs"><div class="os-tanacs-cim">Szombati ismétlési tanács</div><div class="os-tanacs-szov">Vasárnap pihenés, hétfőn (nov. 9.) teljes önellenőrzés és a gyenge pontok pótlása. <strong>Kedden (nov. 10.) a vizsga — sok sikert!</strong></div></div>';
+
+var T={
+"Á/1":{m:1,c:"A hatalommegosztás átalakulása",
+ k15:["Ismertesse milyen okból és hogyan alakult át a hatalommegosztás klasszikus elméletének alkalmazása, milyen elemekkel, intézményekkel bővült!"],
+ k10:["1.","Ismertesse a hatalommegosztás klasszikus elméletét!","2.","Határozza meg, hogy mit jelent a fékek és ellensúlyok rendszere!","3.","Határozza meg, hogy mit jelent az igazgatási hatalom elmélete és milyen történelmi kontextusban jelent meg!"],
+ k5:[]},
+"Á/2":{m:1,c:"Az Országgyűlés és a Kormány viszonya",
+ k15:["Ismertesse az Országgyűlés és a Kormány viszonyát, térjen ki a hatalmi ágakra, a bizalomra és az ellenőrzésre!"],
+ k10:[],
+ k5:[]},
+"Á/3":{m:1,c:"A köztársasági elnök és a Kormány viszonya",
+ k15:["Ismertesse a köztársasági elnök és a Kormány közigazgatási viszonyát, különös tekintettel a köztársasági elnök feladat-és hatáskörére!"],
+ k10:["12.","Határozza meg, hogy mely területszervezési döntések tartoznak az Országgyűlés, valamint a köztársasági elnök feladat- és hatáskörébe!"],
+ k5:[]},
+"Á/4":{m:1,c:"ÁSZ és az alapvető jogok biztosa (ellenőrzés)",
+ k15:["Hasonlítsa össze az Állami Számvevőszék és az alapvető jogok biztosának államigazgatás felett gyakorolt ellenőrző tevékenységét!"],
+ k10:["5.","Ismertesse az igazságszolgáltatás és az államigazgatás viszonyát!","6.","Ismertesse az ügyészség és az államigazgatás viszonyát!"],
+ k5:["2.","Ismertesse, hogy mely államigazgatási, illetve közigazgatási normatív aktusok képezik utólagos normakontroll tárgyát és mely szervek bírálják el ezeket!","3.","Ismertesse az alapvető jogok biztosa és az államigazgatás viszonyát, valamint az alapvető jogok biztosa által alkalmazható eszközöket!","4.","Ismertesse az Állami Számvevőszék és az államigazgatás viszonyát, valamint az Állami Számvevőszék által alkalmazható eszközöket!"]},
+"Á/5":{m:2,c:"A magyar közigazgatás alrendszerei",
+ k15:["Ismertesse a magyar közigazgatás alrendszereit, határozza meg a hasonlóságokat és különbségeket, valamint jellemezze a kapcsolatukat!"],
+ k10:[],
+ k5:["1.","Határozza meg, hogy mit jelent a municipiális hatalom és milyen történelmi kontextusban jelent meg!","5.","Ismertesse, hogy mi jellemzi a helyi önkormányzatokat megillető véleményezési és javaslattételi jogot, továbbá fejtse ki azok tartalmát!","6.","A magyar közigazgatás két alrendszere között a relatív szétválasztásuk ellenére vannak kapcsolódási pontok. Nevezze meg ezeket!","7.","Határozza meg a tutela fogalmát!"]},
+"Á/6":{m:2,c:"Decentralizált és dekoncentrált szervek",
+ k15:["Határozza meg a decentralizált szervek és a dekoncentrált szervek közös sajátosságait és különbségeiket!"],
+ k10:["9.","Határozza meg, hogy milyen előnyei, illetve hátrányai vannak a decentralizáció alkalmazásának a közigazgatásban!"],
+ k5:["10.","Ismertesse, hogy milyen előnyökkel, illetve hátrányokkal jár a centralizáció a közigazgatásban!"]},
+"Á/7":{m:2,c:"Az államigazgatási szervek csoportosítása",
+ k15:["Csoportosítsa az államigazgatási szerveket és határozza meg az elhatárolás alapját, valamint hozzon példát az egyes szervtípusokra!"],
+ k10:["10.","Csoportosítsa az államigazgatási szerveket! Sorolja fel az egyes szervtípusokat!","19.","Határozza meg a kormányzati főhivatalok és a központi hivatalok közötti azonosságokat!","20.","Határozza meg a kormányzati főhivatalok és a központi hivatalok közötti különbségeket!","21.","Határozza meg az autonóm államigazgatási szervek sajátosságait!","25.","Hasonlítsa össze az közintézeti és a közüzemi típusú szerveket! Határozza meg az azonosságokat és a különbségeket!"],
+ k5:["11.","Foglalja össze, mit kell tudni az illetékességről!","25.","Nevezze meg a közszolgáltatások ellátásának lehetséges formáit!","27.","Határozza meg az ex lege szabályozási mód fogalmát!","28.","Határozza meg az intézeti típusú szerv fogalmát, típusait és az elhatárolás alapját!"]},
+"Á/8":{m:2,c:"Az irányítás fogalma, eszközei, típusai",
+ k15:["Határozza meg az irányítás fogalmát, eszközeit, jellemzőit és típusait!"],
+ k10:["11.","Határolja el egymástól az irányítást, a felügyeletet és az ellenőrzést!"],
+ k5:["14.","Határozza meg az irányítás fajtáit az irányítás irányultsága alapján!","15.","Határozza meg, hogy miben mutatkoznak meg az irányítás és a vezetés azonosságai és különbségei!"]},
+"Á/9":{m:3,c:"A Kormány fogalma, funkciói, összetétele",
+ k15:["Határozza meg a Kormány fogalmát, funkcióit és összetételét, röviden jellemezze a miniszterelnök kiemelkedő szerepét!"],
+ k10:["4.","Jellemezze a Kormány és az államigazgatás viszonyát!"],
+ k5:["17.","Jellemezze a tárca nélküli minisztert!","24.","Soroljon fel legalább 5 olyan hatáskört, amelyet az Áht. határoz meg és alkalmazható a költségvetési szerv irányítása során!"]},
+"Á/10":{m:3,c:"A Kormány működése (kormányülés)",
+ k15:["Mutassa be a Kormány működését (kormányülés), döntéshozatalát és ügyrendjét!"],
+ k10:[],
+ k5:["19.","Sorolja fel, hogy - formáját tekintve – milyen döntéseket hozhat a Kormány!","20.","Határozza meg, hogy milyen a Kormány ülésével kapcsolatos, lényeges döntési jogosítványai vannak a miniszterelnöknek!"]},
+"Á/11":{m:3,c:"A kormányülés előkészítése; KÁT",
+ k15:["Jellemezze a Kormány üléseinek előkészítési folyamatát, mutassa be a Közigazgatási Államtitkári Értekezletet!"],
+ k10:[],
+ k5:[]},
+"Á/12":{m:3,c:"A kormánybiztos",
+ k15:["Határozza meg a kormánybiztos fogalmát, funkcióit és jellemzőit!"],
+ k10:[],
+ k5:[]},
+"Á/13":{m:3,c:"Kormánybiztos és a többi segédszerv",
+ k15:["Határozza meg a kormánybiztos és a Kormány többi segédszerve közötti különbségeket és az azonosságaikat!"],
+ k10:["13.","Jellemezze a Kormány kabinetjeit a következő szempontok szerint: funkció, összetétel, működés!","14.","Jellemezze a kormánybizottságot a következő szempontok szerint: feladat, összetétel, működés!","15.","Határozza meg az interminiszteriális bizottság fogalmát és funkcióit és jellemzőit!"],
+ k5:["18.","Sorolja fel a Kormány segédszerveit!"]},
+"Á/14":{m:3,c:"A minisztérium vezetési struktúrája",
+ k15:["Mutassa be a minisztérium vezetési struktúráját és belső szervezeti felépítését!"],
+ k10:["16.","Mutassa be az államtitkár jogállását (feladatai, kinevezése, megbízatásának megszűnése)!","17.","Mutassa be a közigazgatási államtitkár jogállását (feladatai, kinevezése)!","18.","Mutassa be a helyettes államtitkár jogállását (feladatai, kinevezése)!"],
+ k5:[]},
+"Á/15":{m:3,c:"A Miniszterelnökség",
+ k15:["Mutassa be a Miniszterelnökség szervezeti felépítését és vezetési struktúráját!"],
+ k10:[],
+ k5:["9.","Határozza meg a Miniszterelnöki Kabinetiroda jogállását és funkcióit!","16.","Mutassa be a Miniszterelnökség jogállását és funkcióit!"]},
+"Á/16":{m:4,c:"Önkormányzati államigazgatási feladatok",
+ k15:["Ismertesse a helyi önkormányzatok által ellátott államigazgatási feladatok szervezeti kereteit és főbb szabályait!"],
+ k10:["7.","Ismertesse a helyi önkormányzatok felett gyakorolt törvényességi felügyelet rendszerét: nevezze meg a feladat- és hatáskörrel rendelkező állami szerveket és főbb feladataikat!","22.","Mutassa be, hogy mi indokolja a helyi önkormányzatok államigazgatási feladatellátását!"],
+ k5:[]},
+"Á/17":{m:4,c:"A kormányhivatal",
+ k15:["Mutassa be a kormányhivatal vezetési és szervezési struktúráját!"],
+ k10:["23.","Sorolja fel a kormányhivatal főbb feladat- és hatásköreit!"],
+ k5:["12.","Mutassa be a közigazgatási és területfejlesztési miniszter kormányhivatal felett gyakorolt irányítási jogkörét!","13.","Mutassa be a szakmai irányító miniszterek irányítási jogosítványait a kormányhivatal felett gyakorolt irányítási jogkörben!"]},
+"Á/18":{m:4,c:"A járási hivatal",
+ k15:["Mutassa be a járási hivatal jogállását, vezetését és szervezeti felépítését, valamint feladatkörét!"],
+ k10:[],
+ k5:[]},
+"Á/19":{m:4,c:"A közigazgatás alapfunkciói",
+ k15:["Ismertesse a közigazgatás alapfunkcióit, állandó és változó funkcióit valamint ezek összefüggéseit!"],
+ k10:["26.","Ismertesse, hogy milyen törekvések voltak az államigazgatási feladatok felmérésére és milyen eredményt hoztak ezek!","27.","Ismertesse, hogy mit jelent a POSDCORB betűszó és mi a jelentősége?","28.","Ismertesse a hatékony igazgatás modelljét és ennek kritikáját!"],
+ k5:["21.","Ismertesse, hogy hogyan határozza meg a közigazgatás funkcióit a szociológia!","22.","Ismertesse, hogy milyen lehetséges értelmezésekben jelenik meg az államigazgatás funkciójaként a végrehajtás és mit értünk annak tartalmán!","23.","Ismertesse, hogy milyen módszerrel határozható meg az államigazgatási feladatok köre!"]},
+"Á/20":{m:4,c:"Államigazgatási tevékenységfajták",
+ k15:["Csoportosítsa az államigazgatási tevékenységfajtákat!"],
+ k10:["29.","Határozza meg az államigazgatási hatósági jogalkalmazás fogalmát és jellemzőit!","31.","Határozza meg, hogy miben különbözik a kiadmányozás a hatáskörtől!"],
+ k5:["29.","Határozza meg az államigazgatási jogalkalmazás fogalmát!","30.","Foglalja össze, hogy mit kell tudni a hatáskör-átruházás tilalmáról és a szubdelegálás tilalmáról!","31.","Határozza meg a hatáskör és a feladatkör fogalmát, valamint jellemzőiket!","32.","Határozza meg az államigazgatás jogalkotó tevékenységét szűk és tág értelemben!","33.","Határozza meg az államigazgatási tevékenységfajta fogalmát!"]},
+"Á/21":{m:4,c:"A hatósági felügyelet típusai",
+ k15:["Határozza meg a hatósági felügyelet típusait és jellemezze az egyes típusokat!"],
+ k10:["30.","Határozza meg a hatósági felügyelet fogalmát és jellemzőit!"],
+ k5:[]},
+"Á/22":{m:4,c:"A nemzeti vagyon",
+ k15:["Határozza meg a nemzeti vagyon fogalmát, jellemzőit és kategorizálja a vagyonelemeket!"],
+ k10:[],
+ k5:[]},
+"Á/23":{m:5,c:"A szervezeti és működési szabályzat",
+ k15:["Ismertesse a szervezeti és működési szabályzatra vonatkozó jogi szabályozást és főbb elemeit!"],
+ k10:[],
+ k5:[]},
+"Á/24":{m:5,c:"Zárt rendszerű személyzeti politika",
+ k15:["Ismertesse a zárt rendszerű közigazgatási személyzeti politikát!"],
+ k10:[],
+ k5:["8.","Soroljon fel ötöt a Kit-ben meghatározott kormánytisztviselői hivatásetikai alapelvekből!","34.","Határozza meg a közigazgatási személyzeti politika fogalmát!","35.","Határozza meg, hogy mit értünk a közigazgatási pálya biztonságán!","36.","Határozza meg, hogy mit nevezünk asszimilációs rendszernek és differenciált rendszernek és miben különböznek egymástól!","44.","Határozza meg a kormányzati szolgálati jogviszony fogalmát!","45.","Határozza meg a kormányzati szolgálati jogviszony főbb jellemzőit - különösen a felelősség szempontjából - a munkajoghoz hasonlítva!"]},
+"Á/25":{m:5,c:"Nyitott rendszerű személyzeti politika",
+ k15:["Ismertesse a közigazgatási személyzeti politika nyitott rendszerét!"],
+ k10:[],
+ k5:["37.","Ismertesse, hogy mit jelent a közigazgatási pálya nyitottsága és mi a jelentősége!"]},
+"Á/26":{m:5,c:"Személyzeti politika fejlődése 1867-től",
+ k15:["Ismertesse a közigazgatási személyzeti politika magyarországi fejlődését 1867-től, és röviden jellemezze a hét főbb korszakot!"],
+ k10:["8.","Mutassa be a magyar kormányzati rendszer és az államigazgatás fejlődésének történetét a kiegyezéstől 1989-ig és röviden jellemezze az egyes korszakokat különös tekintettel a kormányformára!","43.","Mutassa be a Magyary Programok ’Személyzet’ beavatkozási területét és nevesítsen négy intézkedést, amely a programok szellemében valósult meg az utóbbi években!"],
+ k5:["38.","Jellemezze a közigazgatási személyzeti politika 1867 és 1945 közötti korszakát!","39.","Jellemezze a közigazgatási személyzeti politika 1945 és 1949 közötti korszakát!","40.","Jellemezze a közigazgatási személyzeti politika 1949 és 1957 közötti korszakát!","41.","Jellemezze a közigazgatási személyzeti politika 1957 és 1989 közötti korszakát!","42.","Jellemezze a közigazgatási személyzeti politika 1992 utáni korszakát!"]},
+"Á/27":{m:5,c:"A fegyelmi felelősség",
+ k15:["Mutassa be az államigazgatási dolgozó fegyelmi felelősségének szabályait, és a kiszabható büntetéseket!"],
+ k10:["33.","Határozza meg az államigazgatási dolgozó fegyelmi és kártérítési felelőssége közötti különbségeket!"],
+ k5:["43.","Sorolja fel az államigazgatási dolgozók felelősségi alakzatait!","47.","Határozza meg az etikai vétség fogalmát az államigazgatásban!"]},
+"Á/28":{m:5,c:"A kárfelelősség",
+ k15:["Mutassa be az államigazgatási dolgozó kárfelelősségének feltételeit, a kimentési okokat és típusait!"],
+ k10:["32.","Ismertesse az objektív felelősség fogalmát és jellemzőit az államigazgatási dolgozók vonatkozásában! Példákat is mutasson be!"],
+ k5:["46.","Határozza meg a vis maior fogalmát és jelentőségét!"]},
+"Á/29":{m:5,c:"A vezetői eredményfelelősség",
+ k15:["Jellemezze a vezetői eredményfelelősséget különös tekintettel a jogi felelősségtől való különbözőségére!"],
+ k10:["34.","Jellemezze az államigazgatási dolgozók büntetőjogi felelősségét és röviden mutassa be az egyes csoportjait!","35.","Határozza meg az általában vett jogi felelősség fogalmát, mutassa be rendszerét, típusait és jellemzőit!","36.","Határozza meg a közszolgálati etikai felelősség fogalmát és funkcióit!"],
+ k5:["48.","Határozza meg a hivatásetikai normák funkcióját!","54.","Határozza meg a Magyar Kormánytisztviselői Kar jogállását és főbb – a Kit.-ben meghatározott – feladatait!"]},
+"Á/30":{m:5,c:"Az új közmenedzsment (NPM)",
+ k15:["Jellemezze az új közmenedzsment reformirányzatát, mutassa be kialakulásának okait, szakaszait!"],
+ k10:["37.","Jellemezze – általában véve – az utóbbi évtizedek globális közigazgatási reformirányzatait, különös tekintettel sikeresség feltételrendszerére és nevezze meg a fontosabb reformirányzatokat!","38.","Ismertesse, hogy mi jellemzi a Good Governance (jó kormányzás) irányzatot!","39.","Ismertesse, hogy miben áll a neo-weberi állam és közigazgatás lényege!","42.","Soroljon fel 10 olyan célkitűzést (területet/lépést/intézkedést), amelyek az ezredforduló utáni közigazgatás-fejlesztés nemzetközi gyakorlatára jellemzőek!","44.","Nevezze meg és röviden ismertesse a magyar közigazgatásban 2010 óta meghirdetett jelentős és átfogó közigazgatás-fejlesztési programokat, azok célját, szempontjait, intézkedési területeit!"],
+ k5:[]},
+"Á/31":{m:5,c:"Az Európai Közigazgatási Tér",
+ k15:["Mutassa be az Európai Közigazgatási Tér fogalmát és sorolja fel az európai közigazgatási alapelveket!"],
+ k10:["24.","Határozza meg, hogy milyen elvárások fogalmazódnak meg a közigazgatással szemben a demokratikus jogállamban!","40.","Ismertesse a közigazgatás-fejlesztésben részt vevő nemzetközi szervezetek tevékenységét, típusait és minden típusra írjon legalább 1-1 példát!","41.","Ismertesse, hogy az Európai Unió milyen kötelezettségeket ír elő a tagállamok számára közigazgatásuk kialakítása tekintetében!"],
+ k5:["49.","Néhány mondatban indokolja, miért szükséges a közigazgatás fejlesztése!","50.","Határozza meg az adminisztratív konvergencia fogalmát és jellemezze a jelenséget!","51.","Fejtse ki néhány mondatban, milyen szerepet töltenek be a nemzetközi szervezetek a közigazgatás-fejlesztésben!"]}
+};
+
+var NAPOK=[
+ {h:1,d:"okt. 19. (H)",m:1,t:["Á/1","Á/2"],tip:"tan",tipp:1,tippmegj:"<p>A nyitó nap két alapozó tétellel, amelyek <strong>egymásra épülnek</strong>: előbb az elmélet (hatalommegosztás), majd ennek magyar gyakorlati leképezése (Ogy–Kormány viszony). Érdemes folyamatként kezelni őket.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/1</span> — <strong>A hatalommegosztás átalakulása</strong>: elméleti, történeti ív — a szerzőkre figyelj: Arisztotelész → Locke (törvényhozó, végrehajtó, föderatív) → Montesquieu (3 ág) → Benjamin Constant (államfői/semleges hatalom). A 3 alapforma: klasszikus (USA), kétkamarás törvényhozás, föderalizmus. Az átalakulás lényege: a modern parlamentáris rendszerben a törvényhozás nem ellensúly, hanem partner — az egyensúlyt semleges szervek (ÁSZ, ombudsman, AB) adják.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/2</span> — <strong>Az Országgyűlés és a Kormány viszonya</strong>: a parlamentáris köztársaság lényege: a Kormány az Ogynek felelős, bírnia kell a bizalmát. Kulcsfogalmak: konstruktív bizalmatlanság, bizalmi szavazás. Az Ogy ellenőrző eszközei: interpelláció (van viszontválasz) vs. kérdés (nincs).</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Az interpelláció és a kérdés különbsége (viszontválasz van-e) tipikus kérdés. A Kormány <strong>nem oszlathatja fel</strong> az Ogyt.</div>"},
+ {h:1,d:"okt. 20. (K)",m:1,t:["Á/3","Á/4"],tip:"tan",tipp:1,tippmegj:"<p>A semleges hatalmi szervek napja: a köztársasági elnök és a két parlamenti ellenőrző szerv. Az Á/3 az államfői egyensúlyozó szerepet, az Á/4 a pénzügyi és alapjogi kontrollt mutatja be.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/3</span> — <strong>A köztársasági elnök és a Kormány</strong>: az ellenjegyzés a tengely: válaszd szét az ellenjegyzéshez NEM kötött (önálló) és a kötött jogköröket. Az Ogy feloszlatásának 2 esete: a javasolt miniszterelnököt 40 napon belül nem választják meg, vagy márc. 31-ig nincs költségvetés (ex lex).</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/4</span> — <strong>ÁSZ és az alapvető jogok biztosa</strong>: kétoszlopos összevetés: ÁSZ (pénzügyi-gazdasági, 12 év, zárolhat, akadályozása bűncselekmény) vs. ombudsman (alapjogvédelem, 6 év, bárki kezdeményezheti, érdemi intézkedési joga nincs — csak ajánlás).</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Az ombudsmannak <strong>nincs érdemi intézkedési jogköre</strong> — csak ajánlást tesz, eljárást kezdeményez, nyilvánosságra hoz. Az ÁSZ ezzel szemben zárolhat.</div>"},
+ {h:1,d:"okt. 21. (Sze)",m:2,t:["Á/5","Á/6"],tip:"tan",tipp:1,tippmegj:"<p>A közigazgatás szerkezetének alapfogalmai. Az Á/5 a két nagy alrendszert, az Á/6 a centralizáció-decentralizáció tengelyt mutatja be — a kettő összefügg.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/5</span> — <strong>A magyar közigazgatás alrendszerei</strong>: 2 alrendszer: államigazgatás (országos ügyek, az állam felel) + helyi önkormányzatok (helyi közügyek, választott szervek). A 4 kapcsolódási pont: törvényességi felügyelet, delegált államigazgatási feladatok, területszervezés, véleményezési jog.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/6</span> — <strong>Decentralizált és dekoncentrált szervek</strong>: élesen állítsd szembe: dekoncentrált = centralizált rendszer kirendeltsége, kinevezett vezető, hierarchikus alárendeltség, kormánytisztviselő. Decentralizált = önálló, választott vezető, autonómia, köztisztviselő (területi → önkormányzat, funkcionális → kórház, iskola).</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A dekoncentrált (kormánytisztviselő, kinevezett) vs. decentralizált (köztisztviselő, választott) elhatárolás a tétel magja — kétoszlopos táblát készíts.</div>"},
+ {h:1,d:"okt. 22. (Cs)",m:2,t:["Á/7","Á/8"],tip:"tan",tipp:1,tippmegj:"<p>A szervezetrendszer és az irányítás. Az Á/7 a szervtípusokat rendszerezi, az Á/8 az irányítás-felügyelet-ellenőrzés viszonyt — mindkettő erősen fogalom-alapú.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/7</span> — <strong>Az államigazgatási szervek csoportosítása</strong>: tipikus szervek (Kormány, minisztérium, központi hivatal, kormányzati főhivatal, területi szervek) + atipikus szervek (autonóm államigazgatási, önálló szabályozó — pl. NMHH, MEKH, SZTFH). Másik tengely: civil (kormány-/köztisztviselő) vs. rendészeti (hivatásos szolgálati jogviszony).</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/8</span> — <strong>Az irányítás</strong>: az irányítás a legintenzívebb akaratérvényesítés; eszközei (alapítás, vezetőkinevezés, ellenőrzés, egyedi utasítás). Fajtái: szakmai / szervezet / teljes irányítás. Korlátja a hatáskörelvonás tilalma.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Az irányítás > felügyelet > ellenőrzés intenzitási sorrendet tartsd fejben. A felügyelet kevesebb rendelkezési joggal jár, mint az irányítás.</div>"},
+ {h:1,d:"okt. 23. (P)",m:3,t:["Á/9","Á/10","Á/11"],tip:"tan",hosszu:1,tipp:1,tippmegj:"<p><strong>Hosszú nap</strong>, három összefüggő tétel a Kormányról: fogalom → működés → előkészítés. Kezeld <strong>egyetlen folyamatként</strong> — a Kormány „életét\" követed végig. Számolj 3 órával, tarts több szünetet.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/9</span> — <strong>A Kormány fogalma, funkciói</strong>: az államigazgatás általános hatáskörű szerve; kettős funkció (kormányzati + közigazgatási). A miniszterelnök kiemelkedő szerepe: ő határozza meg az általános politikát, a Kormány megbízatása az ő megbízatásához kötött.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/10</span> — <strong>A Kormány működése</strong>: testületi szervként, kormányüléseken működik; a miniszterelnök vezeti. A döntés formái: rendelet, határozat, irányelv, elvi állásfoglalás.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/11</span> — <strong>A kormányülés előkészítése; KÁT</strong>: a közigazgatási egyeztetés + a Közigazgatási Államtitkári Értekezlet (KÁT), amely minden előterjesztést előzetesen megtárgyal. Tagjai a közigazgatási államtitkárok.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A három tétel egy ívet ad: ne külön magold őket, hanem mondd el a Kormány „útját\" a megalakulástól a döntéshozatalig.</div>"},
+ {h:1,d:"okt. 24. (Szo)",m:1,t:[],tip:"ism",tema:"Ismétlés — 1. hét anyaga · Á/1—Á/11 összefoglaló",osszef:"h1"},
+ {h:1,d:"okt. 25. (V)",m:0,t:[],tip:"pih",tema:"Pihenőnap — kötelező kikapcsolódás"},
+ {h:2,d:"okt. 26. (H)",m:3,t:["Á/12","Á/13"],tip:"tan",tipp:1,tippmegj:"<p>A Kormány segédszervei. Az Á/12 a kormánybiztost önállóan, az Á/13 a többi segédszerv kontextusában mutatja be — sok az átfedés, kezeld őket együtt.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/12</span> — <strong>A kormánybiztos</strong>: egyszemélyi segédszerv; a Kormány nevezi ki normatív határozattal, max. 4 évre; a Kormány helyett és nevében jár el. Rokon: miniszterelnöki biztos, miniszterelnöki megbízott.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/13</span> — <strong>Kormánybiztos és a többi segédszerv</strong>: a kabinet (koordináció, állásfoglalás, nem dönt a Kormány helyett — 4 kabinet) és a kormánybizottság (több ágazatot érintő ügyek). A kulcskülönbség: a kormánybiztos egyszemélyi, a kabinet és kormánybizottság testületi.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Egyszemélyi (kormánybiztos) vs. testületi (kabinet, kormánybizottság) — ez a leggyakoribb elhatárolási kérdés.</div>"},
+ {h:2,d:"okt. 27. (K)",m:3,t:["Á/14","Á/15"],tip:"tan",tipp:1,tippmegj:"<p>A minisztérium belső világa és a Miniszterelnökség. Az Á/14 a vezetési struktúra (politikai vs. szakmai vezetők), ez a tétel magja.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/14</span> — <strong>A minisztérium vezetési struktúrája</strong>: élesen válaszd szét a politikai vezetőket (miniszter, államtitkár) és a szakmai vezetőket (közigazgatási államtitkár, helyettes államtitkár). A belső felépítés: főosztály → osztály.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/15</span> — <strong>A Miniszterelnökség</strong>: a miniszterelnök munkaszervezete, élén a Miniszterelnökséget vezető miniszter; feladata a kormányzati koordináció és a miniszterelnök támogatása.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A politikai (miniszter, államtitkár) vs. szakmai (közig. államtitkár, helyettes államtitkár) vezetők elhatárolása a vizsga kedvence — pontosan tudd, ki melyik.</div>"},
+ {h:2,d:"okt. 28. (Sze)",m:4,t:["Á/16","Á/17"],tip:"tan",tipp:1,tippmegj:"<p>A területi és helyi államigazgatás. Az Á/16 az önkormányzatok delegált feladatait, az Á/17 a kormányhivatalt mutatja be.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/16</span> — <strong>Önkormányzati államigazgatási feladatok</strong>: a delegált (átruházott) feladatok; e körben a testület utasítást nem adhat, a döntést nem bírálhatja felül. Államigazgatási feladatot csak törvény állapíthat meg, arányos támogatással. A jegyző látja el a zömét.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/17</span> — <strong>A kormányhivatal</strong>: vezetés: főispán (politikai) + főigazgató (szakmai) + igazgató. A járási hivatalok a kormányhivatal szervezeti egységei. Feladatok: hatósági ügyek, önkormányzatok törvényességi felügyelete, koordináció.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A kormányhivatal vezetője a <strong>főispán</strong> (a korábbi „kormánymegbízott\" helyett) — a jegyzet erre épít.</div>"},
+ {h:2,d:"okt. 29. (Cs)",m:4,t:["Á/18","Á/19"],tip:"tan",tipp:1,tippmegj:"<p>A legalsó területi szint és a közigazgatás funkciói. Két eltérő tétel — kezeld őket külön.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/18</span> — <strong>A járási hivatal</strong>: a kormányhivatal szervezeti egysége (kirendeltsége), a legalsó szintű általános hatáskörű területi államigazgatási szerv; hivatalvezető vezeti. A kormányablakok (integrált ügyfélszolgálat) működtetése.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/19</span> — <strong>A közigazgatás alapfunkciói</strong>: állandó (a közigazgatás létéből fakadó) vs. változó funkciók. A feladatfelmérés módszertani kérdés; POSDCORB (Gulick 7 eleme) és a hatékony igazgatás modellje.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A POSDCORB hét elemét (Planning, Organizing, Staffing, Directing, Coordinating, Reporting, Budgeting) érdemes fejből tudni.</div>"},
+ {h:2,d:"okt. 30. (P)",m:4,t:["Á/20","Á/21","Á/22"],tip:"tan",hosszu:1,tipp:1,tippmegj:"<p><strong>Hosszú nap</strong>, három eltérő tétel — itt <strong>nincs közös ív</strong>, kezeld őket külön lapra, és súlyozz a kérdésszám szerint. Számolj 3 órával.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/20</span> — <strong>Államigazgatási tevékenységfajták</strong>: jogalkotó tevékenység, hatósági jogalkalmazás, hatósági felügyelet, szervező-szolgáltató tevékenység. Fontos elhatárolások: hatáskör vs. feladatkör, a kiadmányozás (aláírási jog), a hatáskör-átruházás és szubdelegálás tilalma.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/21</span> — <strong>A hatósági felügyelet típusai</strong>: 3 típus: speciális (ex lege, felügyeleti szervek), általános (a jogalkalmazó ellenőrzi saját aktusa követését), törvényességi (köztestületek felett — NEM hatósági felügyelet!).</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/22</span> — <strong>A nemzeti vagyon</strong>: 4 kategória: forgalomképtelen / nemzetgazdaságilag kiemelt / korlátozottan forgalomképes / üzleti. Rendeltetés szerint: kincstári vagyon vs. üzleti vagyon.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A törvényességi felügyelet <strong>nem</strong> hatósági felügyelet, és alanya soha nem lehet magánszemély. A nemzeti vagyon 4 kategóriáját külön lapra vázold.</div>"},
+ {h:2,d:"okt. 31. (Szo)",m:4,t:[],tip:"ism",tema:"Ismétlés — 2. hét anyaga · Á/12—Á/22 összefoglaló",osszef:"h2"},
+ {h:2,d:"nov. 1. (V)",m:0,t:[],tip:"pih",tema:"Pihenőnap — kötelező kikapcsolódás"},
+ {h:3,d:"nov. 2. (H)",m:5,t:["Á/23","Á/24"],tip:"tan",tipp:1,tippmegj:"<p>A működés szabályozása és a személyzeti politika kezdete. Az Á/24 (zárt rendszer) az érdemibb és kérdezettebb.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/23</span> — <strong>A szervezeti és működési szabályzat</strong>: belső szabályzat, jogszabályi felhatalmazás alapján (közjogi szervezetszabályozó eszköz, normatív utasítás). Tartalma: jogállás, feladat-hatáskör, szervezeti felépítés, működés rendje. Az irányító/felügyeleti szerv hagyja jóvá.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/24</span> — <strong>Zárt rendszerű személyzeti politika</strong>: központilag irányított, egységes pragmatika; a munka élethivatás (élethossziglan); 2 alappillér: kiválasztás + karrier(rendszer); elmozdíthatatlanság elve; az előmenetel alapja a szolgálati idő + iskolai végzettség; kötött díjazás.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A zárt rendszer az „élethivatás + karrier + elmozdíthatatlanság\" hármason áll — holnap a nyitott rendszerrel állítod majd szembe.</div>"},
+ {h:3,d:"nov. 3. (K)",m:5,t:["Á/25","Á/26"],tip:"tan",tipp:1,tippmegj:"<p>A nyitott rendszer és a személyzeti politika története. Az Á/25 közvetlenül kapcsolódik a tegnapi zárt rendszerhez — összehasonlító táblát készíts.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/25</span> — <strong>Nyitott rendszerű személyzeti politika</strong>: a magánigazgatáshoz hasonló: korlátozás nélküli belépés és egyoldalú megszüntetés; meghatározott feladatra szerződtetés; politikai szempontú kiválasztás lehetséges (USA: „zsákmányrendszer\"); nagy fluktuáció; teljesítményfüggő díjazás.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/26</span> — <strong>Személyzeti politika fejlődése 1867-től</strong>: 7 korszak időrendje: 1867 (kiegyezés, nyitottság) → 1914 (korszerű zárt rendszer) → 1945 (zsákmányrendszer) → 1945–49 (pártszempontok) → 1949 (államigazgatási, párthűség) → 1957–89 (konszolidáció) → 1992 (demokratikus újjáépítés).</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A zárt (Á/24) vs. nyitott (Á/25) rendszer szembeállítása a leggyakoribb kérdés — a kétoszlopos tábla mentén tudsz a vizsgán érvelni.</div>"},
+ {h:3,d:"nov. 4. (Sze)",m:5,t:["Á/27","Á/28"],tip:"tan",tipp:1,tippmegj:"<p>A felelősségi alakzatok első két fajtája. Mindkettő vétkességhez kötött jogi felelősség — a különbség a tárgyban van.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/27</span> — <strong>A fegyelmi felelősség</strong>: a jogviszonyból eredő kötelezettség vétkes megszegése; fegyelmi eljárás; büntetések sorrendje: megrovás → várakozási idő meghosszabbítása → fizetési fokozatban visszavetés → hivatalvesztés.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/28</span> — <strong>A kárfelelősség</strong>: feltételei: kötelezettségszegés + kár + okozati összefüggés + vétkesség. Gondatlan (korlátozott) vs. szándékos (teljes) károkozás; megőrzési és leltárhiány-felelősség; kimentés vis maior esetén.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> A fegyelmi büntetések sorrendjét (a megrovástól a hivatalvesztésig) és a gondatlan/szándékos károkozás eltérő mértékét pontosan tudd.</div>"},
+ {h:3,d:"nov. 5. (Cs)",m:5,t:["Á/29","Á/30"],tip:"tan",tipp:1,tippmegj:"<p>A vezetői felelősség és a reformirányzat. Az Á/29 a felelősségi alakzatokat zárja, az Á/30 (NPM) új témakört nyit.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/29</span> — <strong>A vezetői eredményfelelősség</strong>: a vezető a szervezeti egysége eredményességéért felel — NEM feltétlenül jogsértés alapján. Állítsd szembe a jogi felelősséggel (jogsértéshez kötött, szankcióval jár). A 4 jogi felelősségi alakzat: fegyelmi, kártérítési, büntetőjogi, etikai.</div><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/30</span> — <strong>Az új közmenedzsment (NPM)</strong>: a jóléti állam túlterjeszkedésére adott válasz (80-as évek vége–ezredforduló); cél a hatékonyság, „olcsó, kicsi állam\"; eszközök: kiszervezés, privatizáció, ügynökségek, teljesítményértékelés. Kritikák: az állam nem működtethető tisztán piaci mintára.</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Az eredményfelelősség NEM jogsértéshez kötött — ez különbözteti meg a 4 jogi felelősségi alakzattól. Ezt emeld ki.</div>"},
+ {h:3,d:"nov. 6. (P)",m:5,t:["Á/31"],tip:"tan",tipp:1,tippmegj:"<p>Az utolsó tanulós tétel: az Európai Közigazgatási Tér. A felkészülés tartalmi zárása — van időd alaposan, és érdemes a teljes anyagra is visszatekinteni.</p><div class=\"tipp-tetel\"><span class=\"tipp-tetel-kod\">Á/31</span> — <strong>Az Európai Közigazgatási Tér</strong>: a 90-es évek második fele; a tagállamok kötelesek az uniós vívmányokat (acquis) integrálni. Az általános követelmények (jogbiztonság, nyitottság-átláthatóság, hatékonyság) és az európai közigazgatási alapelvek (megbízhatóság, pártatlanság, az Európai Bíróság esetjoga: arányosság, jogbiztonság, meghallgatás elve).</div><div class=\"tipp-figyelj\"><strong>⚠ Amire figyelj:</strong> Ez az utolsó új tétel — utána már csak ismétlés jön. Szánj a végén időt arra, hogy a 31 tételt egészben is átfusd fejben.</div>"},
+ {h:3,d:"nov. 7. (Szo)",m:5,t:[],tip:"ism",tema:"Ismétlés — 3. hét anyaga + teljes áttekintés · Á/23—Á/31",osszef:"h3"},
+ {h:3,d:"nov. 8. (V)",m:0,t:[],tip:"pih",tema:"Pihenőnap — kötelező kikapcsolódás"},
+ {h:4,d:"nov. 9. (H)",m:0,t:[],tip:"on",tema:"ZÁRÓ — teljes önellenőrzés, gyenge pontok pótlása, korai lefekvés",tipp:1},
+ {h:4,d:"nov. 10. (K)",m:0,t:[],tip:"viz",tema:"ÍRÁSBELI VIZSGA — Sok sikert!"}
+];
+
+
+
+var ALTRITMUS='<div class="tipp-szakasz-cim">Általános napi ritmus (~2-3 óra)</div><ul class="tipp-lepesek"><li><span class="tipp-lepes-cim">Ráhangolódás<span class="tipp-ido">~10 perc</span></span><br>Nyisd meg a tétel(eke)t, és olvasd át <em>csak a kérdéseket</em> — a 15, 10 és 5 pontosakat is. Így előre látod, hová fut ki a téma.</li><li><span class="tipp-lepes-cim">Megértő átolvasás<span class="tipp-ido">~25-30 perc</span></span><br>Olvasd át a jegyzetet egyszer, végig, <em>jegyzetelés nélkül</em>. A cél nem a rögzítés, hanem a logikai ív és az ok-okozat megértése.</li><li><span class="tipp-lepes-cim">Saját vázlat fejből<span class="tipp-ido">~30 perc</span></span><br>Csukd be a jegyzetet, és <em>fejből</em> vázolj papírra (kulcsszavak, fogalmak, törvényszámok). Aztán nyisd ki, és egészítsd ki, ami kimaradt. Ez lesz a szombati ismétlés alapanyaga — ne dobd el!</li><li><span class="tipp-lepes-cim">A 10 és 5 pontos kérdések<span class="tipp-ido">~30 perc</span></span><br>Ezek a fő tételhez <em>csatolt</em> kiegészítések. Mindegyikhez elég egy-két mondatos vázlatpont. Figyelj a pontos megnevezésekre, számokra és törvényszámokra — írásban ezek értéket érnek.</li><li><span class="tipp-lepes-cim">Hangos önellenőrzés<span class="tipp-ido">~25 perc</span></span><br>Tegyél félre mindent, és mondd el <em>hangosan</em>, mintha vizsgáztatnád magad. Ahol megakadsz — és csak ott — nézz vissza. Ismételd, amíg gördülékenyen megy.</li><li><span class="tipp-lepes-cim">Rövid írásgyakorlás<span class="tipp-ido">~15 perc</span></span><br>Zárd a napot egy mini-próbával: 15 perc alatt írd le vázlatosan a 15 pontos kérdés válaszát, ahogy a vizsgán tennéd. Utána vesd össze a jegyzettel — mi maradt ki?</li></ul><div class="tipp-lab">A 2-3 órát ne egyben told végig: kb. 45-50 percenként tarts 5-10 perc szünetet. A cél a megértés és egy használható vázlat, nem a szó szerinti tudás — azt az ismétlések építik fel.</div>';
+var ONRITMUS='<div class="tipp-szakasz-cim">Záró önellenőrzés ritmusa (~2-3 óra)</div><ul class="tipp-lepesek"><li><span class="tipp-lepes-cim">Ne olvass új anyagot</span><br>Ma nem tanulsz, hanem <em>visszakérdezel</em>. Vedd elő a 3 hét alatt készített saját vázlataidat.</li><li><span class="tipp-lepes-cim">Hangos felidézés tételenként</span><br>Mind a 31 tételt fusd át <em>fejből, hangosan</em> — mintha a vizsgáztatónak magyaráznál. Csak akkor lapozz a jegyzethez, ha elakadsz.</li><li><span class="tipp-lepes-cim">A gyenge pontok pótlása</span><br>Amelyik tételnél akadozol, azt jelöld meg, és célzottan nézd át újra. A három szombati összefoglaló kompakt térképe most a fő referenciád.</li><li><span class="tipp-lepes-cim">Korai lefekvés</span><br>Holnap a vizsga — aludj legalább 7-8 órát, egyél könnyű reggelit, és érkezz 15-20 perccel korábban.</li></ul><div class="tipp-lab">Az utolsó nap nem a bemagolásé, hanem a megnyugvásé. Aki idáig követte a tanmenetet, annak a tudás már a fejében van — most a felidézés gördülékenységét csiszolod.</div>';
+
+var KERDESSOR_AI_BASE="https://kissati84.github.io/szakvizsga-kerdessor-valszthato/";
+var KERDESSOR_AI_FO="kerdessor_allamigazgatas_2026.html";
+var KERDESSOR_AI_PROBA="probateszt_allamigazgatas_2026.html";
+
+var TN={
+  tan:"Új anyag", ism:"Ismétlés", on:"Önellenőrzés",
+  vaz:"Vázlat", pot:"Pótlás", pih:"Pihenő",
+  un:"Ünnep", viz:"Vizsga"
+};
+
+var MNEV={0:"Ismétlés / Záró",1:"Alkotmányos alapok",2:"Szervezetrendszer",3:"Kormány és szervei",4:"Területi igazgatás",5:"Személyzet és reform"};
+
+// Csoportosítás hetek szerint
+
+// ═══════════ BŐVÍTÉSEK: tárolás, dátum ═══════════
+var TANMENET_ID="AI";
+var STORE=(function(){
+  var mem={};
+  var has=(function(){try{var k="__t_"+Math.random();localStorage.setItem(k,"1");localStorage.removeItem(k);return true;}catch(e){return false;}})();
+  return {
+    get:function(k){ if(has){try{return localStorage.getItem(k);}catch(e){}} return (k in mem)?mem[k]:null; },
+    set:function(k,v){ if(has){try{localStorage.setItem(k,v);return;}catch(e){}} mem[k]=v; }
+  };
+})();
+function keszKulcs(d){ return TANMENET_ID+":kesz:"+d; }
+function keszE(d){ return STORE.get(keszKulcs(d))==="1"; }
+function keszSet(d,v){ STORE.set(keszKulcs(d), v?"1":"0"); }
+var HONAP={'jan':0,'feb':1,'febr':1,'már':2,'márc':2,'ápr':3,'máj':4,'jún':5,'júl':6,'aug':7,'szept':8,'okt':9,'nov':10,'dec':11};
+function napDatum(d){var m=d.match(/^([a-záéíóöőúüű]+)\.\s*(\d+)\./i);if(!m)return null;var h=HONAP[m[1].toLowerCase()];if(h===undefined)return null;return new Date(2026,h,parseInt(m[2],10));}
+function maMidnight(){var t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate());}
+function azonosNap(a,b){return !!a&&!!b&&a.getTime()===b.getTime();}
+
+var hetek={};
+NAPOK.forEach(function(n){
+  if(!hetek[n.h]) hetek[n.h]=[];
+  hetek[n.h].push(n);
+});
+var hl=Object.keys(hetek).map(Number).sort(function(a,b){return a-b;});
+
+// Tétel → hely map + kereső index
+var TETEL_HELY={}, KERESO_INDEX=[];
+hl.forEach(function(h){
+  hetek[h].forEach(function(nap, idx){
+    (nap.t||[]).forEach(function(kod){
+      TETEL_HELY[kod]={h:h, idx:idx};
+      var te=T[kod];
+      if(te){
+        KERESO_INDEX.push({kod:kod, cim:te.c, h:h, idx:idx, nap:nap.d,
+          szoveg:(te.c+" "+(te.k15||[]).join(" ")+" "+(te.k10||[]).join(" ")+" "+(te.k5||[]).join(" ")).toLowerCase()});
+      }
+    });
+  });
+});
+// Ma napja + aktív hét
+var MA=maMidnight(), MA_NAP=null, AKTIV_HET=hl[0];
+(function(){
+  var elso=null, utolso=null, talalt=false;
+  hl.forEach(function(h){ hetek[h].forEach(function(nap){
+    var dt=napDatum(nap.d); if(!dt) return;
+    if(!elso) elso=dt; utolso=dt;
+    if(azonosNap(dt,MA)){ MA_NAP=nap.d; AKTIV_HET=h; talalt=true; }
+  });});
+  if(!talalt){
+    if(elso && MA<elso) AKTIV_HET=hl[0];
+    else if(utolso && MA>utolso) AKTIV_HET=hl[hl.length-1];
+  }
+})();
+function haladoFrissit(){
+  var ossz=0, kesz=0;
+  NAPOK.forEach(function(nap){
+    if(["tan","on","ism","vaz","pot"].indexOf(nap.tip)>-1){ ossz++; if(keszE(nap.d)) kesz++; }
+  });
+  var szE=document.getElementById("haladoSzam"), oE=document.getElementById("haladoOssz"), kE=document.getElementById("haladoKitolt");
+  if(szE) szE.textContent=kesz;
+  if(oE) oE.textContent=ossz;
+  if(kE) kE.style.width=(ossz?Math.round(kesz/ossz*100):0)+"%";
+}
+
+
+// Navigációs gombok
+var nav=document.getElementById("navBar");
+var fo=document.getElementById("fo");
+
+hl.forEach(function(h){
+  var btn=document.createElement("button");
+  btn.className="nav-gomb";
+  btn.id="b"+h;
+  btn.textContent=h+". hét";
+  btn.onclick=function(){show(h);};
+  nav.appendChild(btn);
+});
+
+function show(h){
+  document.querySelectorAll(".nav-gomb").forEach(function(b){b.classList.remove("on");});
+  document.getElementById("b"+h).classList.add("on");
+  fo.innerHTML="";
+  var ns=hetek[h];
+
+  // Napi al-navigáció építése
+  var napNav=document.getElementById("napNav");
+  napNav.innerHTML='<div class="nap-nav-cim">'+h+'. hét napjai</div>';
+  ns.forEach(function(nap,idx){
+    var ng=document.createElement("button");
+    ng.className="nap-gomb nap-gomb-mod"+nap.m;
+    var isSzo=nap.d.indexOf("Szo")>-1;
+    var isUn=nap.tip==="un"||nap.tip==="pih";
+    var isViz=nap.tip==="viz";
+    if(isSzo) ng.classList.add("szombat");
+    if(isUn) ng.classList.add("unnep");
+    if(isViz) ng.classList.add("vizsga");
+    var dParts=nap.d.match(/^([a-záéíóöőúüű]+)\.\s*(\d+)\.\s*\(([A-Za-zóöőúüű]+)\)/i);
+    var rovidMap={"H":"Hétfő","K":"Kedd","Sze":"Szerda","Cs":"Csütörtök","P":"Péntek","Szo":"Szombat"};
+    var hnap=dParts?(rovidMap[dParts[3]]||dParts[3]):"";
+    var teljes=dParts?(hnap+" · "+dParts[1]+". "+dParts[2]+"."):nap.d;
+    ng.innerHTML='<span class="nap-gomb-pont"></span><span>'+teljes+'</span>';
+    ng.onclick=function(){ugrasNapra(h,idx);};
+    napNav.appendChild(ng);
+  });
+
+
+  // Heti fejléc
+  var d1=ns[0].d.split("(")[0].trim();
+  var dl=ns[ns.length-1].d.split("(")[0].trim();
+  var mset={};
+  ns.forEach(function(n){ if(n.m>0) mset[n.m]=1; });
+  var mlbl=Object.keys(mset).map(function(m){return MNEV[m];}).join(" + ")||"Összefoglaló ismétlés";
+
+  var hf=document.createElement("div");
+  hf.className="het-fejlec";
+  hf.innerHTML='<div class="het-szam-nagy">'+h+'.</div>'+
+    '<div class="het-info">'+
+      '<div class="het-cim">'+mlbl+'</div>'+
+      '<div class="het-datum">'+d1+' — '+dl+' · '+ns.length+' nap</div>'+
+    '</div>';
+  fo.appendChild(hf);
+
+  // Napok
+  ns.forEach(function(nap){
+    var nk=0;
+    nap.t.forEach(function(k){
+      var te=T[k]; if(te) nk+=te.k15.length+te.k10.length+te.k5.length;
+    });
+
+    var isSzo=nap.d.indexOf("Szo")>-1;
+    var isUn=nap.tip==="un";
+    var isViz=nap.tip==="viz";
+    var isPih=nap.tip==="pih";
+
+    var napDiv=document.createElement("article");
+    napDiv.className="nap m"+nap.m;
+    napDiv.setAttribute("data-nap", nap.d);
+    if(MA_NAP===nap.d) napDiv.classList.add("ma-nap");
+    if(keszE(nap.d)) napDiv.classList.add("kesz");
+    if(isSzo) napDiv.classList.add("szombat");
+    if(isUn||isPih) napDiv.classList.add("unnep");
+    if(isViz) napDiv.classList.add("vizsga");
+
+    // Téma — rövid címet kreálunk a tételekhez
+    var tema=nap.tema;
+    if(!tema && nap.t.length>0){
+      if(nap.t.length===1){
+        var te=T[nap.t[0]];
+        tema=te?te.c:nap.t[0];
+      } else {
+        tema=nap.t.length+" tétel — "+MNEV[nap.m];
+      }
+    }
+    if(!tema) tema=TN[nap.tip];
+
+    // Datum parts
+    var dParts=nap.d.match(/^([a-záéíóöőúüű]+)\.\s*(\d+)\.\s*\(([A-Za-zóöőúüű]+)\)/i);
+    var honap=dParts?dParts[1]:"";
+    var dnap=dParts?dParts[2]:"";
+    var hnap=dParts?dParts[3]:"";
+
+    var statTxt;
+    if(nap.t.length>0){
+      statTxt=nap.t.length+" tétel · "+nk+" kérdés";
+    } else {
+      statTxt=TN[nap.tip];
+    }
+
+    // Teljes napnév kiszámítása
+    var teljesNapMap={"H":"Hétfő","K":"Kedd","Sze":"Szerda","Cs":"Csütörtök","P":"Péntek","Szo":"Szombat","V":"Vasárnap"};
+    var teljesNap=teljesNapMap[hnap]||hnap;
+
+    var fej=document.createElement("div");
+    var van_tartalom=nap.t.length>0||nap.osszef;
+    fej.className="nap-fej"+(van_tartalom?" kattintható":"");
+    fej.innerHTML=
+      '<div class="nap-datum-blokk">'+
+        '<div class="nap-honap">'+honap+'</div>'+
+        '<div class="nap-szam">'+dnap+'</div>'+
+        '<div class="nap-honap-nev">'+hnap+'</div>'+
+      '</div>'+
+      '<div class="nap-info">'+
+        '<div class="nap-tipus-row">'+
+          '<span class="nap-hetnev">'+teljesNap+'</span>'+
+          '<span class="tipus-pill">'+TN[nap.tip]+'</span>'+
+          '<span class="nap-stat">'+statTxt+'</span>'+
+          (nap.hosszu?'<span class="nap-hosszu">⚠ hosszú nap — szánjon rá többet vagy ossza két napra</span>':'')+
+        '</div>'+
+        '<div class="nap-tema">'+tema+'</div>'+
+      '</div>'+
+      (van_tartalom?'<div class="nap-nyil">▼</div>':'');
+
+    var body=document.createElement("div");
+    body.className="nap-body";
+
+    if(van_tartalom){
+      fej.onclick=function(){
+        var open=body.style.display==="block";
+        body.style.display=open?"none":"block";
+        if(open) napDiv.classList.remove("nyitva");
+        else napDiv.classList.add("nyitva");
+      };
+
+      // Ha van összefoglaló, azt renderelni
+      if(nap.osszef && OSSZEF[nap.osszef]){
+        var osDiv=document.createElement("div");
+        osDiv.style.padding="14px 16px";
+        var kUrl=(nap.osszef==="h3")?(KERDESSOR_AI_BASE+KERDESSOR_AI_PROBA):(KERDESSOR_AI_BASE+KERDESSOR_AI_FO);
+        var kSzoveg=(nap.osszef==="h3")?"🎯 Próbateszt a kérdéssorban →":"🎯 Gyakorlás a kérdéssorban →";
+        osDiv.innerHTML='<div class="nyomtat-gomb-sor"><a href="'+kUrl+'" target="_blank" rel="noopener" class="kerdessor-gomb">'+kSzoveg+'</a><button type="button" class="gyakorlo-gomb">🎯 Gyakorló mód</button><button type="button" class="nyomtat-gomb">🖨 Nyomtatás / PDF mentés</button></div>'+
+          '<div class="gyakorlo-segito">Gyakorló mód: előbb próbáld meg fejből (vagy hangosan) megválaszolni a kérdést, majd kattints rá a válasz felfedéséhez.</div>'+
+          OSSZEF[nap.osszef];
+        body.appendChild(osDiv);
+        var ngomb=osDiv.querySelector(".nyomtat-gomb");
+        if(ngomb){ ngomb.onclick=function(e){ e.stopPropagation(); nyomtatOsszefoglalo(napDiv); }; }
+        gyakorloElokeszit(osDiv);
+        var ggomb=osDiv.querySelector(".gyakorlo-gomb");
+        if(ggomb){ ggomb.onclick=function(e){
+          e.stopPropagation();
+          var be=osDiv.classList.toggle("gyakorlo-mod");
+          ggomb.classList.toggle("aktiv", be);
+          ggomb.textContent=be?"🎯 Gyakorló mód: BE":"🎯 Gyakorló mód";
+          if(!be){ osDiv.querySelectorAll(".gy-kerdes.feldve").forEach(function(li){ li.classList.remove("feldve"); }); }
+        }; }
+      }
+
+      // Tanulási tipp panel (tan/on napokon)
+      if(nap.tipp){
+        var tippWrap=document.createElement("div");
+        tippWrap.style.padding="14px 16px 0";
+        var ritmus=(nap.tip==="on")?ONRITMUS:ALTRITMUS;
+        var napiHtml=nap.tippmegj?('<div class="tipp-napi">'+nap.tippmegj+'</div>'):'';
+        tippWrap.innerHTML='<div class="tipp-panel"><div class="tipp-fej"><span class="tipp-fej-cim">📖 Hogyan dolgozd fel ezt a napot?</span><span class="tipp-fej-nyil">▼</span></div><div class="tipp-body">'+napiHtml+ritmus+'</div></div>';
+        var panel=tippWrap.querySelector(".tipp-panel");
+        var pfej=tippWrap.querySelector(".tipp-fej");
+        pfej.onclick=function(e){e.stopPropagation();panel.classList.toggle("nyitva");};
+        body.appendChild(tippWrap);
+      }
+
+      nap.t.forEach(function(k){
+        var te=T[k]; if(!te) return;
+        var tDiv=document.createElement("div");
+        tDiv.className="tetel";
+        var html='<div class="tetel-fej">'+
+          '<span class="tetel-kod">'+k+'</span>'+
+          '<span class="tetel-cim">'+te.c+'</span>'+
+        '</div>';
+
+        // 15p
+        if(te.k15.length>0){
+          html+='<div class="kerdes-csoport k15-csop"><div class="csoport-cim">15 pontos · Fő tétel</div>';
+          te.k15.forEach(function(q){
+            html+='<div class="kerdes k15"><span class="kerdes-jelolo">15p</span><span class="kerdes-szoveg">'+q+'</span></div>';
+          });
+          html+='</div>';
+        }
+        // 10p
+        if(te.k10.length>0){
+          html+='<div class="kerdes-csoport k10-csop"><div class="csoport-cim">10 pontos kérdések</div>';
+          for(var i=0;i<te.k10.length;i+=2){
+            html+='<div class="kerdes"><span class="kerdes-jelolo">10·'+te.k10[i]+'</span><span class="kerdes-szoveg">'+te.k10[i+1]+'</span></div>';
+          }
+          html+='</div>';
+        }
+        // 5p
+        if(te.k5.length>0){
+          html+='<div class="kerdes-csoport k5-csop"><div class="csoport-cim">5 pontos kérdések</div>';
+          for(var i=0;i<te.k5.length;i+=2){
+            html+='<div class="kerdes"><span class="kerdes-jelolo">5·'+te.k5[i]+'</span><span class="kerdes-szoveg">'+te.k5[i+1]+'</span></div>';
+          }
+          html+='</div>';
+        }
+
+        tDiv.innerHTML=html;
+        body.appendChild(tDiv);
+      });
+    }
+
+    // Kész-jelölő + MA jelvény a típus-sorba
+    if(["tan","on","ism","vaz","pot"].indexOf(nap.tip)>-1){
+      var trow=fej.querySelector(".nap-tipus-row");
+      if(trow){
+        var jel=document.createElement("div");
+        jel.className="nap-jelolok";
+        var keszNyomva=keszE(nap.d);
+        jel.innerHTML=(MA_NAP===nap.d?'<span class="nap-ma-badge">MA</span>':'')+
+          '<button type="button" class="nap-kesz-gomb'+(keszNyomva?' aktiv':'')+'">'+(keszNyomva?'✓ kész':'kész')+'</button>';
+        trow.appendChild(jel);
+        var kg=jel.querySelector(".nap-kesz-gomb");
+        kg.onclick=function(e){
+          e.stopPropagation();
+          var most=!keszE(nap.d);
+          keszSet(nap.d, most);
+          napDiv.classList.toggle("kesz", most);
+          kg.classList.toggle("aktiv", most);
+          kg.innerHTML=most?'✓ kész':'kész';
+          haladoFrissit();
+        };
+      }
+    }
+    napDiv.appendChild(fej);
+    napDiv.appendChild(body);
+    fo.appendChild(napDiv);
+  });
+
+  fo.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function ugrasNapra(h,idx){
+  show(h);
+  setTimeout(function(){
+    var napok=document.querySelectorAll("#fo .nap");
+    if(napok[idx]){
+      napok[idx].scrollIntoView({behavior:"smooth",block:"center"});
+      napok[idx].classList.add("highlighted");
+      // Automatikus kibontás
+      var body=napok[idx].querySelector(".nap-body");
+      var fej=napok[idx].querySelector(".nap-fej.kattintható");
+      if(body&&fej&&body.style.display!=="block"){
+        body.style.display="block";
+        napok[idx].classList.add("nyitva");
+      }
+      setTimeout(function(){napok[idx].classList.remove("highlighted");},1400);
+    }
+  },100);
+}
+
+// ═══════════ Gyakorló mód: kérdés/válasz szétválasztása ═══════════
+function gyakorloElokeszit(container){
+  var szekek=container.querySelectorAll(".os-szek");
+  szekek.forEach(function(szek){
+    var cim=szek.querySelector(".os-szek-cim");
+    if(!cim || cim.textContent.indexOf("pontos kérdések")===-1) return;
+    szek.querySelectorAll("li").forEach(function(li){
+      var html=li.innerHTML;
+      var sv=html.indexOf("</strong>");
+      if(sv===-1) return;
+      var sep=html.indexOf(" \u2014 ", sv);
+      if(sep===-1) return;
+      li.innerHTML=html.substring(0, sep)+'<span class="gy-valasz">'+html.substring(sep)+'</span>';
+      li.classList.add("gy-kerdes");
+      li.addEventListener("click", function(e){
+        if(container.classList.contains("gyakorlo-mod")){ e.stopPropagation(); li.classList.toggle("feldve"); }
+      });
+    });
+  });
+}
+
+// ═══════════ Nyomtatás / PDF ═══════════
+function nyomtatOsszefoglalo(napDiv){
+  document.querySelectorAll(".nap.nyomtatando").forEach(function(n){ n.classList.remove("nyomtatando"); });
+  napDiv.classList.add("nyomtatando");
+  var b=napDiv.querySelector(".nap-body"); if(b) b.style.display="block";
+  document.body.classList.add("nyomtat");
+  window.print();
+}
+window.addEventListener("afterprint", function(){
+  document.body.classList.remove("nyomtat");
+  document.querySelectorAll(".nap.nyomtatando").forEach(function(n){ n.classList.remove("nyomtatando"); });
+});
+
+// ═══════════ Kereső ═══════════
+var keresoInput=document.getElementById("kereso");
+var keresoEred=document.getElementById("keresoEred");
+if(keresoInput){
+  keresoInput.addEventListener("input", function(){
+    var q=this.value.trim().toLowerCase();
+    keresoEred.innerHTML="";
+    if(q.length<2){ keresoEred.classList.remove("aktiv"); return; }
+    var tal=KERESO_INDEX.filter(function(it){ return it.szoveg.indexOf(q)>-1; });
+    // duplikátum-szűrés kód szerint
+    var latott={}, egyedi=[];
+    tal.forEach(function(it){ if(!latott[it.kod]){ latott[it.kod]=1; egyedi.push(it); } });
+    egyedi=egyedi.slice(0,12);
+    if(egyedi.length===0){ keresoEred.innerHTML='<div class="kereso-nincs">Nincs találat erre: „'+this.value+'"</div>'; keresoEred.classList.add("aktiv"); return; }
+    egyedi.forEach(function(it){
+      var div=document.createElement("div");
+      div.className="kereso-sor";
+      div.innerHTML='<span class="kereso-kod">'+it.kod+'</span><span class="kereso-cim">'+it.cim+'</span><span class="kereso-nap">'+it.nap+'</span>';
+      div.onclick=function(){ keresoEred.classList.remove("aktiv"); keresoInput.value=""; ugrasNapra(it.h, it.idx); };
+      keresoEred.appendChild(div);
+    });
+    keresoEred.classList.add("aktiv");
+  });
+  document.addEventListener("click", function(e){
+    if(!e.target.closest || !e.target.closest(".kereso-wrap")) keresoEred.classList.remove("aktiv");
+  });
+}
+
+// ═══════════ Indítás: aktuális hét + ma kiemelése ═══════════
+show(AKTIV_HET);
+haladoFrissit();
+if(MA_NAP){
+  setTimeout(function(){
+    var c=document.querySelector('#fo .nap[data-nap="'+MA_NAP+'"]');
+    if(c) c.scrollIntoView({behavior:"smooth",block:"center"});
+  }, 200);
+}
+
+</script>
+</body>
+</html>
